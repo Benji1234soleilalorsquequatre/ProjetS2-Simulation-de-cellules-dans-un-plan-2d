@@ -1,11 +1,12 @@
+package model;
 public class Cell{
     private State currentState;
     private State nextState;
     private int humidity;
     private int heat;
-    public Cell(State currentState, State nextState, int humidity,int heat){
+    public Cell(State currentState, int humidity,int heat){
         this.currentState=currentState;
-        this.nextState= curentState;
+        this.nextState= currentState;
         this.humidity=humidity;
         this.heat=heat;
 
@@ -18,7 +19,7 @@ public class Cell{
         return this.nextState;
     }
     public int getHumidity(){
-        return this.humidty;
+        return this.humidity;
     }
     public int getHeat(){
         return this.heat;

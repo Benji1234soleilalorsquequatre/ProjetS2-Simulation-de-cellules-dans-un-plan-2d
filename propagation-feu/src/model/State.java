@@ -1,3 +1,4 @@
+package model;
 public enum State{
-  SAFE,DANGER,FIRE,BURNED;
+    SAFE,DANGER,FIRE,DEAD;
 }
