@@ -1,8 +1,10 @@
+package model;
+
 /**
  * The Grid class represents a grid structure with cells initialized to a safe state and specific
  * parameters.
  */
-package model;
+
 public class Grid{
     private Cell[][] forest;
     private int height;
