@@ -38,6 +38,7 @@ public class Grid{
 
 
             }
+            System.out.println();
         }
     }
 }
