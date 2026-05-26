@@ -21,7 +21,21 @@ public class Grid{
         for(int i=0;i<height;i++){
             for(int j=0;j<width;j++){
                 State currentState=this.forest[i][j].getCurrentState();
-                
+                String a="a";
+                if(currentState==State.SAFE){
+                    a="O";
+                }
+                if(currentState==State.DANGER){
+                    a="!";
+                }
+                if(currentState==State.FIRE){
+                    a="X";
+                }
+                if(currentState==State.DEAD){
+                    a=" ";
+                }
+                System.out.print(a);
+
 
             }
         }
