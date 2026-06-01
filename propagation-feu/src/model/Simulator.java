@@ -13,15 +13,7 @@ public class Simulator {
         int h=currentGrid.getHeight();
         int w=currentGrid.getWidth();
         Grid nextGrid=new Grid(h,w);
-        for(int i=0;i<h;i++){
-            for(int j=0;j<w;j++){
-                Cell currentCell= currentGrid.getCell(i,j);
-                State currentState= currentCell.getCurrentState();
-                State futureState= currentState;
-                nextGrid.setCellState( i, j,futureState);
-            }
-        }
-        this.counter++;
+       
     }
 
 
