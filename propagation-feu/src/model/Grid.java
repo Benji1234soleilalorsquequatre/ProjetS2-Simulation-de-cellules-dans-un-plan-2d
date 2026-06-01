@@ -2,6 +2,10 @@
  * The Grid class represents a grid structure with cells initialized to a safe state and specific
  * parameters.
  */
+/**
+ * The Grid class represents a grid structure with cells initialized to a safe state and specific
+ * parameters.
+ */
 package model;
 public class Grid{
     private Cell[][] forest;
@@ -56,5 +60,35 @@ public class Grid{
             }
             System.out.println();
         }
+    }
+    /**
+     * The `getCell` function returns the cell at the specified row and column coordinates within a
+     * forest grid if the coordinates are within the grid boundaries.
+     * 
+     * @param row The `row` parameter represents the row index of the cell in a 2D grid or matrix. It
+     * is used to specify the vertical position of the cell within the grid.
+     * @param col The `col` parameter in the `getCell` method represents the column index of the cell
+     * that you want to retrieve from the `forest` array. It is used to specify the column position of
+     * the cell within the 2D array.
+     * @return The method is returning a Cell object located at the specified row and column in the
+     * forest array. If the row and column values are within the valid range, it returns the Cell
+     * object at that position. If the row and column values are outside the valid range, it returns
+     * null.
+     */
+    public Cell getCell(int row,int col){
+        if(row>=0 && row<height && col>=0 && col<width){
+            return this.forest[row][col];
+        }
+        return null;
+
+    }
+    // The `setCellState` method in the `Grid` class is responsible for updating the state of a
+    // specific cell in the grid at the given row and column indices with a new state provided as
+    // `newState`. Here's a breakdown of what the method does:
+    public void setCellState(int row,int col, State newState){
+         if(row>=0 && row<height && col>=0 && col<width){
+            this.forest[row][col]=new Cell(newState, 40,0);
+         }
+
     }
 }
