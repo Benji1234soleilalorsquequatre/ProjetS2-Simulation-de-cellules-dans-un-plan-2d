@@ -1,4 +1,10 @@
 package model;
-public enum State{
-    SAFE,DANGER,FIRE,DEAD;
+
+public enum State {
+    EMPTY,
+    TREE,
+    BURNING,
+    ASH,
+    WATER,
+    FIREBREAK
 }
