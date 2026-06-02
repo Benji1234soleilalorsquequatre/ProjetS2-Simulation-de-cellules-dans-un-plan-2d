@@ -1,39 +1,28 @@
 package main;
 
-import model.Grid;
-import model.State;
-import simulation.FirePropagationAlgorithm;
-import simulation.NaiveFireAlgorithm;
-import simulation.SimulationConfig;
-import simulation.SimulationEngine;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main {
+public class Main extends Application {
+
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        FXMLLoader loader =
+                new FXMLLoader(Main.class.getResource("view.fxml"));
+
+        Scene scene = new Scene(loader.load());
+
+        stage.setTitle("Simulation Feu de Forêt");
+
+        stage.setScene(scene);
+
+        stage.show();
+    }
 
     public static void main(String[] args) {
-        Grid grid = new Grid(10, 10);
-        grid.setCellState(5, 5, State.BURNING);
-
-        SimulationConfig config = new SimulationConfig();
-        /**On peut modifier les paramètres directement dans le main ici si besoin :
-         * Exemple :
-         * config.setBaseSpreadProbability(0.60);
-         */
-        FirePropagationAlgorithm algorithm = new NaiveFireAlgorithm();
-        /**On peut changer en cours l'algorithme ici avec :
-         * engine.setAlgorithm(new NouvelAlgorithme());
-        */
-
-        SimulationEngine engine = new SimulationEngine(grid, algorithm, config);
-
-        System.out.println("Initial grid:");
-        engine.getCurrentGrid().displayGrid();
-
-        for (int i = 0; i < 7; i++) {
-            engine.step();
-
-            System.out.println();
-            System.out.println("Step " + engine.getStepCounter() + ":");
-            engine.getCurrentGrid().displayGrid();
-        }
+        launch();
     }
-} 
+}
