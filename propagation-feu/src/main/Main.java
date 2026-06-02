@@ -1,19 +1,39 @@
 package main;
+
 import model.Grid;
-public class Main{
-    /** 
-     * @param args
-     */
-    /**
-     * The main function in Java with an empty body.
-     * 
-     * @param args The `args` parameter in the `main` method is an array of strings that allows you to
-     * pass command-line arguments to your Java program when it is executed. You can access these
-     * arguments within your program to customize its behavior based on the input provided at runtime.
-     */
-    public static void main(String [] args){
-        Grid foret=new Grid(5,5);
-        foret.displayGrid();
-        
+import model.State;
+import simulation.FirePropagationAlgorithm;
+import simulation.NaiveFireAlgorithm;
+import simulation.SimulationConfig;
+import simulation.SimulationEngine;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Grid grid = new Grid(10, 10);
+        grid.setCellState(5, 5, State.BURNING);
+
+        SimulationConfig config = new SimulationConfig();
+        /**On peut modifier les paramètres directement dans le main ici si besoin :
+         * Exemple :
+         * config.setBaseSpreadProbability(0.60);
+         */
+        FirePropagationAlgorithm algorithm = new NaiveFireAlgorithm();
+        /**On peut changer en cours l'algorithme ici avec :
+         * engine.setAlgorithm(new NouvelAlgorithme());
+        */
+
+        SimulationEngine engine = new SimulationEngine(grid, algorithm, config);
+
+        System.out.println("Initial grid:");
+        engine.getCurrentGrid().displayGrid();
+
+        for (int i = 0; i < 7; i++) {
+            engine.step();
+
+            System.out.println();
+            System.out.println("Step " + engine.getStepCounter() + ":");
+            engine.getCurrentGrid().displayGrid();
+        }
     }
-}
+} 
