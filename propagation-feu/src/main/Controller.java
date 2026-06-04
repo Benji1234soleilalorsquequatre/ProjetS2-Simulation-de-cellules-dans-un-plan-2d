@@ -1,12 +1,15 @@
+/**
+ * The Controller class in a Java application initializes a simulation engine for a forest fire
+ * simulation and updates the display accordingly.
+ */
 package main;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import model.Grid;
 import model.State;
-
 import simulation.NaiveFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
@@ -14,141 +17,81 @@ import simulation.SimulationEngine;
 public class Controller {
 
     @FXML
-    private GridPane grille;
+    private Canvas canvas; 
 
-    // grille graphique
-    private Button[][] cellules;
+    private final int CELL_SIZE = 20; // cell size
 
-    // simulation
     private Grid forest;
-
     private SimulationEngine engine;
 
     @FXML
     public void initialize() {
-
         System.out.println("INITIALIZE");
-
-        // création de la grille logique
         forest = new Grid(20, 20);
-
-        // cellule en feu au centre
         forest.setCellState(10, 10, State.BURNING);
-
-        // configuration simulation
-        SimulationConfig config =
-                new SimulationConfig();
-
-        // algorithme
-        NaiveFireAlgorithm algorithm =
-                new NaiveFireAlgorithm();
-
-        // moteur de simulation
+        SimulationConfig config = new SimulationConfig();
+        NaiveFireAlgorithm algorithm = new NaiveFireAlgorithm();
+        
         engine = new SimulationEngine(
                 forest,
                 algorithm,
                 config
         );
 
-        // création grille graphique
-        cellules = new Button[20][20];
-
-        for (int row = 0; row < 20; row++) {
-
-            for (int col = 0; col < 20; col++) {
-
-                Button cellule = new Button();
-
-                cellule.setPrefSize(30, 30);
-
-                cellules[row][col] = cellule;
-
-                grille.add(cellule, col, row);
-            }
-        }
-
+    
         updateDisplay();
     }
 
-    /**
-     * Met à jour l'affichage graphique.
-     */
     private void updateDisplay() {
+        Grid currentGrid = engine.getCurrentGrid();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        Grid currentGrid =
-                engine.getCurrentGrid();
+        // On efface la toile avant de redessiner
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         for (int row = 0; row < 20; row++) {
-
             for (int col = 0; col < 20; col++) {
+                State state = currentGrid.getCell(row, col).getState();
 
-                State state =
-                        currentGrid
-                                .getCell(row, col)
-                                .getState();
-
+                
                 switch (state) {
-
                     case TREE:
-
-                        cellules[row][col].setStyle(
-                                "-fx-background-color: green;"
-                        );
-
+                        gc.setFill(Color.FORESTGREEN);
                         break;
-
                     case BURNING:
-
-                        cellules[row][col].setStyle(
-                                "-fx-background-color: red;"
-                        );
-
+                        gc.setFill(Color.RED);
                         break;
-
                     case ASH:
-
-                        cellules[row][col].setStyle(
-                                "-fx-background-color: black;"
-                        );
-
+                        gc.setFill(Color.DARKGRAY);
                         break;
-
                     case WATER:
-
-                        cellules[row][col].setStyle(
-                                "-fx-background-color: blue;"
-                        );
-
+                        gc.setFill(Color.BLUE);
                         break;
-
                     case FIREBREAK:
-
-                        cellules[row][col].setStyle(
-                                "-fx-background-color: brown;"
-                        );
-
+                        gc.setFill(Color.BROWN);
                         break;
-
                     case EMPTY:
-
-                        cellules[row][col].setStyle(
-                                "-fx-background-color: white;"
-                        );
-
+                        gc.setFill(Color.WHITE);
                         break;
                 }
+
+                // Dessin du rectangle coloré
+                gc.fillRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                
+                // Dessin de la petite bordure de la case
+                gc.setStroke(Color.web("#dcdcdc"));
+                gc.setLineWidth(0.5);
+                gc.strokeRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
         }
     }
 
     /**
-     * Lance une étape de simulation.
+     * Lance une étape de simulation à chaque clic sur le bouton.
      */
     @FXML
     private void startSimulation() {
-
         engine.step();
-
         updateDisplay();
     }
 }
