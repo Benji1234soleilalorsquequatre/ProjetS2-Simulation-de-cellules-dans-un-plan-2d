@@ -7,7 +7,10 @@ package main;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.input.MouseEvent;
+import model.Cell;
 import model.Grid;
 import model.State;
 import simulation.NaiveFireAlgorithm;
@@ -38,8 +41,27 @@ public class Controller {
                 config
         );
 
+        canvas.setOnMouseClicked(this::handleCanvasClick);
     
         updateDisplay();
+    }
+
+    private void handleCanvasClick(MouseEvent event) {
+
+        int col = (int) (event.getX() / CELL_SIZE);
+        int row = (int) (event.getY() / CELL_SIZE);
+
+        Grid currentGrid = engine.getCurrentGrid();
+
+        if (currentGrid.isInside(row, col)) {
+
+            Cell cell = currentGrid.getCell(row, col);
+
+            stateLabel.setText("État : " + cell.getState());
+            humidityLabel.setText("Humidité : " + cell.getHumidity());
+            heatLabel.setText("Chaleur : " + cell.getHeat());
+            fuelLabel.setText("Combustible : " + cell.getFuel());
+    }
     }
 
     private void updateDisplay() {
@@ -94,4 +116,16 @@ public class Controller {
         engine.step();
         updateDisplay();
     }
+
+    @FXML
+    private Label stateLabel;
+
+    @FXML
+    private Label humidityLabel;
+
+    @FXML
+    private Label heatLabel;
+
+    @FXML
+    private Label fuelLabel;
 }

@@ -9,7 +9,7 @@ public class SimulationConfig {
     private double fuelConsumption;
 
     public SimulationConfig() {
-        this.baseSpreadProbability = 0.30;
+        this.baseSpreadProbability = 0.50;
         this.humidityImpact = 0.004;
         this.heatImpact = 0.002;
         this.windImpact = 0.10;

@@ -3,6 +3,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
 
 <BorderPane prefHeight="450.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
 
@@ -13,5 +15,14 @@
    <center>
       <Canvas fx:id="canvas" width="400.0" height="400.0" BorderPane.alignment="CENTER" />
    </center>
+
+   <right>
+      <VBox spacing="5">
+         <Label fx:id="stateLabel"/>
+         <Label fx:id="humidityLabel"/>
+         <Label fx:id="heatLabel"/>
+         <Label fx:id="fuelLabel"/>
+      </VBox>
+   </right>
 
 </BorderPane>
