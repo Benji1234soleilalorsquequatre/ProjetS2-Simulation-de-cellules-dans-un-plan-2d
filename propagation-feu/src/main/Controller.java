@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import model.Cell;
 import model.Grid;
 import model.State;
+import simulation.AdvancedFireAlgorithm;
 import simulation.NaiveFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
@@ -33,7 +34,7 @@ public class Controller {
         forest = new Grid(20, 20);
         forest.setCellState(10, 10, State.BURNING);
         SimulationConfig config = new SimulationConfig();
-        NaiveFireAlgorithm algorithm = new NaiveFireAlgorithm();
+        AdvancedFireAlgorithm algorithm = new AdvancedFireAlgorithm();
         
         engine = new SimulationEngine(
                 forest,

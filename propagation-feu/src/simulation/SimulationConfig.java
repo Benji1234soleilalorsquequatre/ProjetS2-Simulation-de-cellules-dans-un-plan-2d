@@ -1,5 +1,7 @@
 package simulation;
 
+import model.Wind;
+
 public class SimulationConfig {
 
     private double baseSpreadProbability;
@@ -8,12 +10,17 @@ public class SimulationConfig {
     private double windImpact;
     private double fuelConsumption;
 
+    private Wind wind;
+
     public SimulationConfig() {
-        this.baseSpreadProbability = 0.50;
+
+        this.baseSpreadProbability = 0.150;
         this.humidityImpact = 0.004;
         this.heatImpact = 0.002;
-        this.windImpact = 0.10;
+        this.windImpact = 0.1;
         this.fuelConsumption = 10.0;
+
+        this.wind = new Wind(10, 1, 1);
     }
 
     public double getBaseSpreadProbability() {
@@ -54,5 +61,13 @@ public class SimulationConfig {
 
     public void setFuelConsumption(double fuelConsumption) {
         this.fuelConsumption = fuelConsumption;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
+
+    public void setWind(Wind wind) {
+        this.wind = wind;
     }
 }
