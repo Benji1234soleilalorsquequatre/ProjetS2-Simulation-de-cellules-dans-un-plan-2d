@@ -6,5 +6,6 @@ public enum State {
     BURNING,
     ASH,
     WATER,
-    FIREBREAK
+    FIREBREAK,
+    PREVENTIVE
 }
