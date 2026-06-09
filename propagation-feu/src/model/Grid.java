@@ -21,13 +21,15 @@ public class Grid {
 
             for (int col = 0; col < width; col++) {
 
-                this.forest[row][col] =
-                        new Cell(
-                                State.TREE,
-                                40,
-                                0,
-                                100
-                        );
+                int randomFuel = 30 + (int)(Math.random() * 71); 
+                int randomHumidity = 5 + (int)(Math.random() * 21);
+
+                this.forest[row][col] = new Cell(
+                    State.TREE,
+                    randomHumidity,
+                    0,             
+                    randomFuel    
+                );
             }
         }
     }
