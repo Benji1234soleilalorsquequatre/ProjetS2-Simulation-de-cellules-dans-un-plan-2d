@@ -7,13 +7,18 @@ package main;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import model.Cell;
 import model.Grid;
 import model.State;
 import simulation.AdvancedFireAlgorithm;
+import simulation.FirePropagationAlgorithm;
 import simulation.NaiveFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
@@ -23,18 +28,30 @@ public class Controller {
     @FXML
     private Canvas canvas; 
 
-    private final int CELL_SIZE = 20; // cell size
+    private final int CELL_SIZE = 8; // cell size
 
     private Grid forest;
     private SimulationEngine engine;
 
     @FXML
     public void initialize() {
+        timeline = new Timeline(new KeyFrame(Duration.millis(200), e -> {
+            engine.step();
+            updateDisplay();
+
+            if (!containsFire()) {
+                timeline.stop();
+                running = false;
+            }
+        })
+        );
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
         System.out.println("INITIALIZE");
-        forest = new Grid(20, 20);
-        forest.setCellState(10, 10, State.BURNING);
+        forest = new Grid(200, 200);
+        forest.setCellState(24, 24, State.BURNING);
         SimulationConfig config = new SimulationConfig();
-        AdvancedFireAlgorithm algorithm = new AdvancedFireAlgorithm();
+        FirePropagationAlgorithm algorithm = new AdvancedFireAlgorithm();
         
         engine = new SimulationEngine(
                 forest,
@@ -45,6 +62,21 @@ public class Controller {
         canvas.setOnMouseClicked(this::handleCanvasClick);
     
         updateDisplay();
+    }
+
+    private boolean containsFire() {
+
+        Grid grid = engine.getCurrentGrid();
+
+        for (int row = 0; row < grid.getHeight(); row++) {
+            for (int col = 0; col < grid.getWidth(); col++) {
+
+                if (grid.getCell(row, col).getState() == State.BURNING) {
+                    return true;
+                }
+            }
+        }
+    return false;
     }
 
     private void handleCanvasClick(MouseEvent event) {
@@ -72,8 +104,8 @@ public class Controller {
         // On efface la toile avant de redessiner
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        for (int row = 0; row < 20; row++) {
-            for (int col = 0; col < 20; col++) {
+        for (int row = 0; row < 200; row++) {
+            for (int col = 0; col < 200; col++) {
                 State state = currentGrid.getCell(row, col).getState();
 
                 
@@ -109,14 +141,26 @@ public class Controller {
         }
     }
 
+    private Timeline timeline;
+    private boolean running = false;
     /**
      * Lance une étape de simulation à chaque clic sur le bouton.
      */
     @FXML
     private void startSimulation() {
-        engine.step();
-        updateDisplay();
-    }
+
+        if (running) {
+            timeline.pause();
+            startButton.setText("Start");
+            running = false;
+        } else {
+            timeline.play();
+            startButton.setText("Stop");
+            running = true;
+        }   
+    }   
+    @FXML 
+    private Button startButton;
 
     @FXML
     private Label stateLabel;

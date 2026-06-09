@@ -151,26 +151,26 @@ public class AdvancedFireAlgorithm
         Cell cell,
         SimulationConfig config) {
 
-    int remainingFuel =
+        int remainingFuel =
             (int) (cell.getFuel()
             - config.getFuelConsumption());
 
-    cell.setFuel(
+        cell.setFuel(
             Math.max(0, remainingFuel));
 
-    if (cell.getFuel() <= 0) {
+        if (cell.getFuel() <= 0) {
 
-        cell.setState(State.ASH);
-        cell.setHeat(0);
+            cell.setState(State.ASH);
+            cell.setHeat(20);
 
-    } else {
+        } else {
 
-        cell.setHeat(
-            Math.max(
-                    20,
-                    Math.min(100, cell.getFuel())
-            )
-        );
+            cell.setHeat(
+                Math.max(
+                        20,
+                        Math.min(100, cell.getFuel())
+                )
+            );
         }
     }   
 }
