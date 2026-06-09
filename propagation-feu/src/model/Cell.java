@@ -7,27 +7,20 @@ public class Cell {
     private int humidity;
     private int heat;
     private int fuel;
+    private int wetTime = 0;
 
-    public Cell(State state,
-                int humidity,
-                int heat,
-                int fuel) {
+    public Cell(State state, int humidity, int heat, int fuel) {
 
         this.state = state;
-
         this.humidity = humidity;
         this.heat = heat;
         this.fuel = fuel;
     }
 
     public Cell copy() {
-
-        return new Cell(
-                state,
-                humidity,
-                heat,
-                fuel
-        );
+        Cell copy = new Cell(state, humidity, heat, fuel);
+        copy.wetTime = this.wetTime;
+        return copy;
     }
 
     // ===== STATE =====
@@ -38,6 +31,10 @@ public class Cell {
 
     public void setState(State state) {
         this.state = state;
+    }
+    
+    public boolean isWet(){
+        return state == State.WET;
     }
 
     // ===== DATA =====
@@ -64,6 +61,14 @@ public class Cell {
 
     public void setFuel(int fuel) {
         this.fuel = fuel;
+    }
+
+    public int getWetTime(){
+        return wetTime;
+    }
+
+    public void setWetTime(int wetTime){
+        this.wetTime = wetTime;
     }
 
     // ===== FIRE =====
