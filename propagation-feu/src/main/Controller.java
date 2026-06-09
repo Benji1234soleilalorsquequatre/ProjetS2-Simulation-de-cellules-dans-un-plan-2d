@@ -20,6 +20,7 @@ import model.State;
 import simulation.AdvancedFireAlgorithm;
 import simulation.FirePropagationAlgorithm;
 import simulation.NaiveFireAlgorithm;
+import simulation.PreventionFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
 
@@ -51,7 +52,7 @@ public class Controller {
         forest = new Grid(200, 200);
         forest.setCellState(24, 24, State.BURNING);
         SimulationConfig config = new SimulationConfig();
-        FirePropagationAlgorithm algorithm = new AdvancedFireAlgorithm();
+        FirePropagationAlgorithm algorithm = new PreventionFireAlgorithm();
         
         engine = new SimulationEngine(
                 forest,
@@ -137,6 +138,10 @@ public class Controller {
                         break;
                     case WET:
                         gc.setFill(Color.LIGHTBLUE);
+                        break;
+                    case PREVENTIVE:
+                        gc.setFill(Color.ORANGE);
+                        break;
                 }
 
                 // Dessin du rectangle coloré
