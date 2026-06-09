@@ -88,13 +88,23 @@ public class Controller {
 
         if (currentGrid.isInside(row, col)) {
 
+            if(canadairMode) {
+                dropWater(row, col);
+
+                canadairMode = false;
+                canadairButton.setText("Canadair");
+
+            updateDisplay();
+            return;
+            }       
+
             Cell cell = currentGrid.getCell(row, col);
 
             stateLabel.setText("État : " + cell.getState());
             humidityLabel.setText("Humidité : " + cell.getHumidity());
             heatLabel.setText("Chaleur : " + cell.getHeat());
             fuelLabel.setText("Combustible : " + cell.getFuel());
-    }
+        }
     }
 
     private void updateDisplay() {
@@ -128,6 +138,8 @@ public class Controller {
                     case EMPTY:
                         gc.setFill(Color.WHITE);
                         break;
+                    case WET:
+                        gc.setFill(Color.LIGHTBLUE);
                 }
 
                 // Dessin du rectangle coloré
@@ -143,6 +155,52 @@ public class Controller {
 
     private Timeline timeline;
     private boolean running = false;
+    private boolean canadairMode = false;
+
+    @FXML
+    private void activateCanadair() {
+
+        if (!running) {
+            canadairMode = true;
+            canadairButton.setText("Choisir une zone");
+        }
+    }
+
+    private void dropWater(int centerRow, int centerCol) {
+
+        Grid grid = engine.getCurrentGrid();
+
+        int radius = 2;
+
+        for (int dr = -radius; dr <= radius; dr++) {
+            for (int dc = -radius; dc <= radius; dc++) {
+
+                if (dr * dr + dc * dc > radius * radius) {
+                    continue;
+                }
+
+                int row = centerRow + dr;
+                int col = centerCol + dc;
+
+                if (!grid.isInside(row, col)) {
+                    continue;
+                }
+
+                Cell cell = grid.getCell(row, col);
+
+                if (cell.getState() == State.ASH) {
+                    continue;
+                }
+
+                cell.setState(State.WET);
+                cell.setWetTime(5);
+
+                cell.setHumidity(100);
+                cell.setHeat(20);
+            }
+        }
+    }
+
     /**
      * Lance une étape de simulation à chaque clic sur le bouton.
      */
@@ -159,6 +217,9 @@ public class Controller {
             running = true;
         }   
     }   
+    @FXML
+    private Button canadairButton;
+
     @FXML 
     private Button startButton;
 

@@ -138,6 +138,11 @@ public class AdvancedFireAlgorithm
 
     probability *= fuelFactor;
 
+    // Effet du canadair
+    if(target.getState() == State.WET){
+        probability *= 0.05;
+    }
+
     // Bornage final
     probability = Math.max(
             0.0,
