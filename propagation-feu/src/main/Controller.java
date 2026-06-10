@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import model.Cell;
 import model.Grid;
 import model.State;
+import model.Vegetation;
 import simulation.AdvancedFireAlgorithm;
 import simulation.FirePropagationAlgorithm;
 import simulation.NaiveFireAlgorithm;
@@ -122,7 +123,11 @@ public class Controller {
                 
                 switch (state) {
                     case TREE:
-                        gc.setFill(Color.FORESTGREEN);
+                        if (currentGrid.getCell(row, col).getVegetation() == Vegetation.BRUSHWOOD) {
+                            gc.setFill(Color.YELLOWGREEN); // Vert clair pour les broussailles
+                        } else {
+                            gc.setFill(Color.DARKGREEN); // Vert foncé pour les grands arbres
+                        }
                         break;
                     case BURNING:
                         gc.setFill(Color.RED);

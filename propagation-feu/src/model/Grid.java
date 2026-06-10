@@ -21,14 +21,28 @@ public class Grid {
 
             for (int col = 0; col < width; col++) {
 
-                int randomFuel = 30 + (int)(Math.random() * 71); 
-                int randomHumidity = 5 + (int)(Math.random() * 21);
+               Vegetation type = (Math.random() < 0.3) ? Vegetation.BRUSHWOOD : Vegetation.TREE;
 
+                int randomHumidity;
+                int randomFuel;
+
+                if (type == Vegetation.TREE) {
+                    // Les arbres 
+                    randomFuel = 50 + (int)(Math.random() * 51); 
+                    randomHumidity = 10 + (int)(Math.random() * 21); 
+                } else {
+                    // Les broussailles 
+                    randomFuel = 10 + (int)(Math.random() * 11); 
+                    randomHumidity = 0 + (int)(Math.random() * 10); 
+                }
+
+                // On crée la cellule en lui passant son type de végétation en 2ème paramètre
                 this.forest[row][col] = new Cell(
                     State.TREE,
                     randomHumidity,
                     0,             
-                    randomFuel    
+                    randomFuel,
+                    type
                 );
             }
         }

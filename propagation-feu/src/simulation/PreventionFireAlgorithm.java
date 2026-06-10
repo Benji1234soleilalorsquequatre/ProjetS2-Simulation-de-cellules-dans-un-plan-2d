@@ -3,6 +3,7 @@ package simulation;
 import model.Cell;
 import model.Grid;
 import model.State;
+import model.Vegetation;
 import model.Wind;
 
 public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
@@ -114,6 +115,13 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
         // Quantité de combustible disponible
         double fuelFactor = 0.5 + target.getFuel() / 200.0;
         probability *= fuelFactor;
+
+        //avec la vegetation
+        if(target.getVegetation()==Vegetation.BRUSHWOOD){
+            probability+=0.35;// les broussailles ont plus de chances de prendre feu
+        }else{
+            probability-=0.10;
+        }
 
         // Bornage de la probabilité finale entre 0.0 et 1.0
         probability = Math.max(0.0, Math.min(1.0, probability));

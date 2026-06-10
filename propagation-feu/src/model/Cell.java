@@ -3,24 +3,35 @@ package model;
 public class Cell {
 
     private State state;
+    private Vegetation vegetation;
 
     private int humidity;
     private int heat;
     private int fuel;
     private int wetTime = 0;
 
-    public Cell(State state, int humidity, int heat, int fuel) {
+    public Cell(State state, int humidity, int heat, int fuel, Vegetation vegetation) {
 
         this.state = state;
         this.humidity = humidity;
         this.heat = heat;
         this.fuel = fuel;
+        this.vegetation = vegetation;
     }
 
     public Cell copy() {
-        Cell copy = new Cell(state, humidity, heat, fuel);
+        Cell copy = new Cell(state, humidity, heat, fuel, vegetation);
         copy.wetTime = this.wetTime;
         return copy;
+    }
+
+    // ===== VEGETATION =====
+    public Vegetation getVegetation() {
+        return this.vegetation;
+    }
+
+    public void setVegetation(Vegetation vegetation) {
+        this.vegetation = vegetation;
     }
 
     // ===== STATE =====
@@ -32,8 +43,8 @@ public class Cell {
     public void setState(State state) {
         this.state = state;
     }
-    
-    public boolean isWet(){
+
+    public boolean isWet() {
         return state == State.WET;
     }
 
@@ -63,11 +74,11 @@ public class Cell {
         this.fuel = fuel;
     }
 
-    public int getWetTime(){
+    public int getWetTime() {
         return wetTime;
     }
 
-    public void setWetTime(int wetTime){
+    public void setWetTime(int wetTime) {
         this.wetTime = wetTime;
     }
 
@@ -94,6 +105,7 @@ public class Cell {
     public String toString() {
 
         return state
+                + " V:" + vegetation
                 + " H:" + humidity
                 + " T:" + heat
                 + " F:" + fuel;
