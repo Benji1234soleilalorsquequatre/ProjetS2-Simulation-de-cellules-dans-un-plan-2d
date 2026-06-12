@@ -1,19 +1,17 @@
 # Simulation de propagation du feu dans une grille 2D
 
-Projet Java ING1 visant à simuler la propagation d'un feu dans une forêt représentée par une grille 2D.
-
 Le projet contient une version en ligne de commande permettant de tester le modèle de simulation, ainsi qu'une version graphique JavaFX destinée à l'utilisation finale.
 
 ## Objectif du projet
 
-L'application simule l'évolution d'un feu sur une grille composée de cellules. Chaque cellule peut représenter un état différent, par exemple une zone vide, de la végétation, une cellule en feu ou une cellule brûlée.
+L'application simule l'évolution d'un feu sur une grille composée de cellules. Chaque cellule peut représenter un état différent, par exemple de la végétation, une cellule en feu ou une cellule brûlée.
 
 La simulation peut prendre en compte différents paramètres comme :
 - l'état des cellules voisines ;
 - le type de végétation ;
 - le vent ;
 - des probabilités de propagation ;
-- des interactions utilisateur comme déclencher un feu ou modifier la grille.
+- des interactions utilisateur comme larguer de l'eau sur la grille.
 
 ## Structure du projet
 
@@ -28,6 +26,7 @@ propagation-feu/
 │       ├── Controller.java
 │       └── view.fxml
 └── .gitignore
+```
 
 ## Installation et lancement du projet
 
@@ -293,11 +292,14 @@ Deux scripts sont disponibles pour compiler et lancer rapidement le projet depui
 
 ```powershell
 .\run-cli.ps1
+```
 
-ou 
+### Version graphique
 
 ```powershell
 .\run-gui.ps1 -JavaFxPath "C:\...\openjfx-21.0.11_windows-x64_bin-sdk\javafx-sdk-21.0.11\lib"
+```
+
 Remplacer le chemin par le chemin ou se trouve javafx sur son pc.
 
 Les scripts .ps1 sont destinés à Windows PowerShell.
