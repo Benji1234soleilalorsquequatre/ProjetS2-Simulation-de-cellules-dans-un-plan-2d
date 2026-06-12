@@ -16,7 +16,7 @@
    </bottom>
 
    <center>
-      <Canvas fx:id="canvas" height="400.0" width="400.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="canvas" height="800.0" width="800.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
       <VBox spacing="5" BorderPane.alignment="CENTER">

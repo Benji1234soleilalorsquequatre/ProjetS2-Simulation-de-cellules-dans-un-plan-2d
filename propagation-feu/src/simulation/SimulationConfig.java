@@ -20,7 +20,7 @@ public class SimulationConfig {
         this.windImpact = 0.1;
         this.fuelConsumption = 10.0;
 
-        this.wind = new Wind(10, 1, 1);
+        this.wind = new Wind(10, 0, 0);
     }
 
     public double getBaseSpreadProbability() {
