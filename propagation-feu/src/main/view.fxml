@@ -14,7 +14,6 @@
    <bottom>
       <Button fx:id="canadairButton" text="Canadair" onAction="#activateCanadair"/>
    </bottom>
-
    <center>
       <Canvas fx:id="canvas" height="800.0" width="800.0" BorderPane.alignment="CENTER" />
    </center>

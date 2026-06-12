@@ -2,6 +2,10 @@ package simulation;
 
 import model.Wind;
 
+/**
+ * Contient l'ensemble des variables physiques et mathématiques de la simulation.
+ * Agit comme une table de mixage pour modifier le comportement du feu.
+ */
 public class SimulationConfig {
 
     private double baseSpreadProbability;
@@ -12,62 +16,33 @@ public class SimulationConfig {
 
     private Wind wind;
 
+    /**
+     * Initialise la configuration avec les paramètres physiques par défaut.
+     */
     public SimulationConfig() {
-
         this.baseSpreadProbability = 0.150;
         this.humidityImpact = 0.004;
         this.heatImpact = 0.002;
         this.windImpact = 0.1;
         this.fuelConsumption = 10.0;
-
-        this.wind = new Wind(10, 0, 0);
+        this.wind = new Wind(10, 0, 0); // Vent modéré vers l'Est
     }
 
-    public double getBaseSpreadProbability() {
-        return baseSpreadProbability;
-    }
+    public double getBaseSpreadProbability() { return baseSpreadProbability; }
+    public void setBaseSpreadProbability(double baseSpreadProbability) { this.baseSpreadProbability = baseSpreadProbability; }
 
-    public void setBaseSpreadProbability(double baseSpreadProbability) {
-        this.baseSpreadProbability = baseSpreadProbability;
-    }
+    public double getHumidityImpact() { return humidityImpact; }
+    public void setHumidityImpact(double humidityImpact) { this.humidityImpact = humidityImpact; }
 
-    public double getHumidityImpact() {
-        return humidityImpact;
-    }
+    public double getHeatImpact() { return heatImpact; }
+    public void setHeatImpact(double heatImpact) { this.heatImpact = heatImpact; }
 
-    public void setHumidityImpact(double humidityImpact) {
-        this.humidityImpact = humidityImpact;
-    }
+    public double getWindImpact() { return windImpact; }
+    public void setWindImpact(double windImpact) { this.windImpact = windImpact; }
 
-    public double getHeatImpact() {
-        return heatImpact;
-    }
+    public double getFuelConsumption() { return fuelConsumption; }
+    public void setFuelConsumption(double fuelConsumption) { this.fuelConsumption = fuelConsumption; }
 
-    public void setHeatImpact(double heatImpact) {
-        this.heatImpact = heatImpact;
-    }
-
-    public double getWindImpact() {
-        return windImpact;
-    }
-
-    public void setWindImpact(double windImpact) {
-        this.windImpact = windImpact;
-    }
-
-    public double getFuelConsumption() {
-        return fuelConsumption;
-    }
-
-    public void setFuelConsumption(double fuelConsumption) {
-        this.fuelConsumption = fuelConsumption;
-    }
-
-    public Wind getWind() {
-        return wind;
-    }
-
-    public void setWind(Wind wind) {
-        this.wind = wind;
-    }
+    public Wind getWind() { return wind; }
+    public void setWind(Wind wind) { this.wind = wind; }
 }

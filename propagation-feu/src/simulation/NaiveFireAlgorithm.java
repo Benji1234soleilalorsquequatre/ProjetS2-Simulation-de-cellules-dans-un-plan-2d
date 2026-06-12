@@ -6,6 +6,13 @@ import model.State;
 
 public class NaiveFireAlgorithm implements FirePropagationAlgorithm {
 
+    /** 
+     * @param currentGrid
+     * @param nextGrid
+     * @param row
+     * @param col
+     * @param config
+     */
     @Override
     public void apply(Grid currentGrid, Grid nextGrid, int row, int col, SimulationConfig config) {
         Cell cell = currentGrid.getCell(row, col);
@@ -18,6 +25,13 @@ public class NaiveFireAlgorithm implements FirePropagationAlgorithm {
         burnCurrentCell(nextGrid.getCell(row, col));
     }
 
+    /** 
+     * @param currentGrid
+     * @param nextGrid
+     * @param row
+     * @param col
+     * @param config
+     */
     private void spreadToNeighbors(Grid currentGrid, Grid nextGrid, int row, int col, SimulationConfig config) {
         int[][] directions = {
             {-1, 0},
@@ -46,6 +60,9 @@ public class NaiveFireAlgorithm implements FirePropagationAlgorithm {
         }
     }
 
+    /** 
+     * @param cell
+     */
     private void burnCurrentCell(Cell cell) {
         cell.setState(State.ASH);
     }

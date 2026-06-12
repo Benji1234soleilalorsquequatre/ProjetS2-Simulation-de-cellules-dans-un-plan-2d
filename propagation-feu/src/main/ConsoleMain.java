@@ -8,6 +8,9 @@ import simulation.SimulationEngine;
 
 public class ConsoleMain {
 
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         Grid forest = new Grid(10, 10);
         forest.setCellState(5, 5, State.BURNING);

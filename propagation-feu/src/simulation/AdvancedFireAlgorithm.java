@@ -14,6 +14,13 @@ public class AdvancedFireAlgorithm
             { 1, -1}, { 1, 0}, { 1, 1}
     };
 
+    /** 
+     * @param currentGrid
+     * @param nextGrid
+     * @param row
+     * @param col
+     * @param config
+     */
     @Override
     public void apply(
             Grid currentGrid,
@@ -44,6 +51,14 @@ public class AdvancedFireAlgorithm
         );
     }
 
+    /** 
+     * @param currentGrid
+     * @param nextGrid
+     * @param row
+     * @param col
+     * @param source
+     * @param config
+     */
     private void spreadFire(
             Grid currentGrid,
             Grid nextGrid,
@@ -89,6 +104,13 @@ public class AdvancedFireAlgorithm
         }
     }
 
+    /** 
+     * @param source
+     * @param target
+     * @param direction
+     * @param config
+     * @return double
+     */
     private double computeSpreadProbability(
         Cell source,
         Cell target,
@@ -152,6 +174,10 @@ public class AdvancedFireAlgorithm
     return probability;
     }   
 
+    /** 
+     * @param cell
+     * @param config
+     */
     private void updateBurningCell(
         Cell cell,
         SimulationConfig config) {
