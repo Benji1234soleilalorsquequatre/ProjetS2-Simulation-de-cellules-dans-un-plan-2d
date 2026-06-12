@@ -24,6 +24,14 @@
          <Label fx:id="humidityLabel" />
          <Label fx:id="heatLabel" />
          <Label fx:id="fuelLabel" />
+         <Label text="=== Configuration ===" style="-fx-font-weight: bold;-fx-padding-top: 15;"/>
+         <Label text="Humidité Min Arbre :" />
+         <javafx.scene.control.TextField fx:id="inputMinHumidity" text="10" prefWidth="80.0"/>
+         
+         <Label text="Combustible Min Arbre :" />
+         <javafx.scene.control.TextField fx:id="inputMinFuel" text="50" prefWidth="80.0"/>
+         
+         <Button text="Relancer la Simu" onAction="#handleResetSimulation" style="-fx-background-color: #19ad0b; -fx-text-fill: white;-fx-font-weight: bold;"/>
       </VBox>
    </right>
 

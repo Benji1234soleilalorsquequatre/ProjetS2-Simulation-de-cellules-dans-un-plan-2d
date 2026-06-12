@@ -12,6 +12,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+import javafx.scene.control.TextField;
 import model.Grid;
 import model.State;
 import model.Cell;
@@ -27,6 +28,10 @@ public class Controller {
 
     @FXML
     private Canvas canvas; 
+    @FXML
+    private TextField inputMinHumidity;
+    @FXML
+    private TextField inputMinFuel;
 
     private Timeline timeline;
     private boolean running = false;
@@ -122,6 +127,40 @@ public class Controller {
             running = true;
         }   
     }   
+
+    @FXML
+    private void handleResetSimulation() {
+        // 1. On stoppe le rafraîchissement automatique en cours
+        timeline.pause();
+        running = false;
+        startButton.setText("Start");
+
+        try {
+            // 2. On récupère ce que l'utilisateur a écrit dans l'interface
+            int minHum = Integer.parseInt(inputMinHumidity.getText());
+            int minFuel = Integer.parseInt(inputMinFuel.getText());
+
+            // 3. On crée une toute nouvelle grille avec notre constructeur à 4 paramètres
+            forest = new Grid(70, 70, minHum, minFuel);
+            forest.setCellState(24, 24, State.BURNING);
+
+            // 4. On réinjecte la grille dans un nouveau moteur de simulation
+            SimulationConfig config = new SimulationConfig();
+            engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), config);
+
+            // 5. On demande au gestionnaire d'affichage d'utiliser le nouveau moteur
+            // (on doit recréer le displayManager car l'ancien pointe sur l'ancienne simulation)
+            displayManager = new DisplayManager(engine, canvas);
+
+            // 6. On redessine l'écran à blanc
+            displayManager.updateDisplay();
+            System.out.println("Simulation relancée ! Humidité min : " + minHum + " | Combustible min : " + minFuel);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Erreur : Veuillez entrer des nombres valides dans les cases !");
+        }
+    }
+
     @FXML
     private Button canadairButton;
 

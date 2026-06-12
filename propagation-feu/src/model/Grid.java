@@ -46,7 +46,38 @@ public class Grid {
                 );
             }
         } // Fin de la boucle col
-    } // Fin du constructeur Grid (c'est cette accolade qui manquait !)
+    } // Fin du constructeur Grid pour le premier lançage
+
+    // ===== 2ème CONSTRUCTEUR : Pour la réinitialisation personnalisée =====
+    public Grid(int height, int width, int minHumidityTree, int minFuelTree) {
+        this.height = height;
+        this.width = width;
+        this.forest = new Cell[height][width];
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Vegetation vegetation = (Math.random() < 0.3) ? Vegetation.BRUSHWOOD : Vegetation.TREE;
+                int randomHumidity;
+                int randomFuel;
+
+                if (vegetation == Vegetation.TREE) {
+                    randomFuel = minFuelTree + (int)(Math.random() * 51); 
+                    randomHumidity = minHumidityTree + (int)(Math.random() * 21); 
+                } else {
+                    randomFuel = 10 + (int)(Math.random() * 11); 
+                    randomHumidity = 0 + (int)(Math.random() * 10); 
+                }
+
+                this.forest[row][col] = new Cell(
+                    State.TREE,
+                    randomHumidity,
+                    0,
+                    randomFuel,
+                    vegetation
+                );
+            }
+        }
+    }
 
     // ===== DIMENSIONS =====
 
