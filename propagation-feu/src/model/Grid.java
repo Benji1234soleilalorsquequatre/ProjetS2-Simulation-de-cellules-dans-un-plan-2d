@@ -67,10 +67,34 @@ public class Grid {
 
                 if (vegetation == Vegetation.TREE) {
                     randomFuel = minFuelTree + (int)(Math.random() * 51); 
-                    randomHumidity = minHumidityTree + (int)(Math.random() * 21); 
+                    if(randomFuel < 0) {
+                        randomFuel = 0;
+                    }
+                    if(randomFuel > 100) {
+                        randomFuel = 100;
+                    }
+                    randomHumidity = minHumidityTree + (int)(Math.random() * 21);
+                    if(randomHumidity < 0) {
+                        randomHumidity = 0;
+                    }
+                    if(randomHumidity > 100) {
+                        randomHumidity = 100;
+                    } 
                 } else {
-                    randomFuel = 10 + (int)(Math.random() * 11); 
-                    randomHumidity = 0 + (int)(Math.random() * 10); 
+                    randomFuel = minFuelTree - 40 + (int)(Math.random() * 11);
+                    if(randomFuel < 0) {
+                        randomFuel = 0;
+                    }
+                    if(randomFuel > 100) {
+                        randomFuel = 100;
+                    }  
+                    randomHumidity = minHumidityTree - 10 + (int)(Math.random() * 10);
+                    if(randomHumidity < 0) {
+                        randomHumidity = 0;
+                    }
+                    if(randomHumidity > 100) {
+                        randomHumidity = 100;
+                    }
                 }
 
                 this.forest[row][col] = new Cell(
