@@ -3,6 +3,7 @@ package main;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import model.Grid;
 import model.State;
 import model.Cell;
+import model.Wind;
 import simulation.PreventionFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
@@ -39,6 +41,8 @@ public class Controller {
     @FXML private Label fuelLabel;
     @FXML private TextField inputGridWidth;
     @FXML private TextField inputGridHeight;
+    @FXML private TextField inputWindSpeed;
+    @FXML private ComboBox<String> windDirectionCombo;
   
    
 
@@ -64,6 +68,7 @@ public class Controller {
 
         forest = new Grid(70, 70);
         forest.setCellState(35, 35, State.BURNING); // Foyer initial
+        windDirectionCombo.setValue("Nord");
         
         engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
         displayManager = new DisplayManager(engine, canvas);
@@ -259,6 +264,52 @@ public class Controller {
             int gridWidth= Integer.parseInt(inputGridWidth.getText());
             int gridHeight= Integer.parseInt(inputGridHeight.getText());
             int heat = Integer.parseInt(inputHeat.getText());
+            int windSpeed = Integer.parseInt(inputWindSpeed.getText());
+            String windDirection = windDirectionCombo.getValue(); 
+
+            int dx = 0;
+            int dy = 0;
+
+            switch(windDirection){
+                case("Nord"):
+                    dx = 0;
+                    dy = 1;
+                    break;
+                case "Sud":
+                    dx = 0;
+                    dy = -1;
+                    break;
+                case "Est":
+                    dx = 1;
+                    dy = 0;
+                    break;
+                case "Ouest":
+                    dx = -1;
+                    dy = 0;
+                    break;
+                case "Nord-Est":
+                    dx = 1;
+                    dy = 1;
+                    break;
+                case "Nord-Ouest":
+                    dx = -1;
+                    dy = 1;
+                    break;
+                case "Sud-Est":
+                    dx = 1;
+                    dy = -1;
+                    break;
+                case "Sud-Ouest":
+                    dx = -1;
+                    dy = -1;
+                    break;              
+            }
+
+            Wind wind = new Wind(windSpeed, dx, dy);
+
+            SimulationConfig config = new SimulationConfig();
+
+            config.setWind(wind);
 
             gridHeight= Math.max(10, Math.min(200, gridHeight));
             gridWidth=Math.max(10,Math.min(200,gridWidth));
@@ -269,7 +320,8 @@ public class Controller {
             forest = new Grid(gridHeight, gridWidth, minHum, minFuel, maxHum, maxFuel, heat);
             forest.setCellState(gridHeight/2,gridWidth/2, State.BURNING);
 
-            engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
+            engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), config);
+            
             displayManager = new DisplayManager(engine, canvas);
             createTimeline(speed);
             double cellSize = 8;
