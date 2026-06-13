@@ -1,4 +1,5 @@
 package simulation;
+
 import model.Grid;
 import model.Cell;
 import model.State;
@@ -51,7 +52,8 @@ public class SimulationEngine {
 
     /**
      * Manages water evaporation from Canadair drops.
-     * Decreases humidity of wet cells each turn until they return to normal vegetation state.
+     * Decreases humidity of wet cells each turn until they return to normal
+     * vegetation state.
      *
      * @param grid The grid to apply evaporation to
      */
@@ -88,14 +90,5 @@ public class SimulationEngine {
      */
     public int getStepCounter() {
         return stepCounter;
-    }
-
-    /**
-     * Allows changing which algorithm is used for fire propagation.
-     *
-     * @param algorithm The new algorithm to apply
-     */
-    public void setAlgorithm(FirePropagationAlgorithm algorithm) {
-        this.algorithm = algorithm;
     }
 }

@@ -101,18 +101,16 @@ public class Controller {
         engine = new SimulationEngine(forest, createSelectedAlgorithm(), new SimulationConfig());
         displayManager = new DisplayManager(engine, canvas);
 
-        double cellSize = 8;
-
-        double offsetX = (canvas.getWidth() - forest.getWidth() * cellSize) / 2;
-        double offsetY = (canvas.getHeight() - forest.getHeight() * cellSize) / 2;
-
-        displayManager.getCamera().setPosition(offsetX, offsetY);
+        centerCameraOnForest();
 
         setupCanvasControls();
 
         displayManager.updateDisplay();
     }
 
+    /**
+     * @param speed
+     */
     private void createTimeline(double speed) {
         timeline = new Timeline(new KeyFrame(Duration.millis(speed), e -> {
             engine.step();
@@ -301,8 +299,74 @@ public class Controller {
     }
 
     /**
-     * Stoppe la simulation en cours et génère une toute nouvelle forêt
-     * en utilisant les paramètres saisis par l'utilisateur.
+     * Creates a wind object from the user interface values.
+     *
+     * @param windSpeed The wind speed entered by the user.
+     * @return The wind configured by the user.
+     */
+    private Wind createWindFromInput(int windSpeed) {
+        String windDirection = windDirectionCombo.getValue();
+
+        int dx = 0;
+        int dy = 0;
+
+        switch (windDirection) {
+            case "Nord":
+                dx = 0;
+                dy = 1;
+                break;
+            case "Sud":
+                dx = 0;
+                dy = -1;
+                break;
+            case "Est":
+                dx = 1;
+                dy = 0;
+                break;
+            case "Ouest":
+                dx = -1;
+                dy = 0;
+                break;
+            case "Nord-Est":
+                dx = 1;
+                dy = 1;
+                break;
+            case "Nord-Ouest":
+                dx = -1;
+                dy = 1;
+                break;
+            case "Sud-Est":
+                dx = 1;
+                dy = -1;
+                break;
+            case "Sud-Ouest":
+                dx = -1;
+                dy = -1;
+                break;
+            default:
+                dx = 0;
+                dy = 0;
+                break;
+        }
+
+        return new Wind(windSpeed, dx, dy);
+    }
+
+    /**
+     * Centers the camera on the current forest grid.
+     */
+    private void centerCameraOnForest() {
+        double cellSize = 8;
+
+        double offsetX = (canvas.getWidth() - forest.getWidth() * cellSize) / 2;
+        double offsetY = (canvas.getHeight() - forest.getHeight() * cellSize) / 2;
+
+        displayManager.getCamera().setPosition(offsetX, offsetY);
+    }
+
+    /**
+     * stop current simulation and generate a new forest
+     * by using user's parameters.
      */
     @FXML
     private void handleResetSimulation() {
@@ -319,47 +383,9 @@ public class Controller {
             int gridHeight = Integer.parseInt(inputGridHeight.getText());
             int heat = Integer.parseInt(inputHeat.getText());
             int windSpeed = Integer.parseInt(inputWindSpeed.getText());
-            String windDirection = windDirectionCombo.getValue();
 
-            int dx = 0;
-            int dy = 0;
+            Wind wind = createWindFromInput(windSpeed);
 
-            switch (windDirection) {
-                case ("Nord"):
-                    dx = 0;
-                    dy = 1;
-                    break;
-                case "Sud":
-                    dx = 0;
-                    dy = -1;
-                    break;
-                case "Est":
-                    dx = 1;
-                    dy = 0;
-                    break;
-                case "Ouest":
-                    dx = -1;
-                    dy = 0;
-                    break;
-                case "Nord-Est":
-                    dx = 1;
-                    dy = 1;
-                    break;
-                case "Nord-Ouest":
-                    dx = -1;
-                    dy = 1;
-                    break;
-                case "Sud-Est":
-                    dx = 1;
-                    dy = -1;
-                    break;
-                case "Sud-Ouest":
-                    dx = -1;
-                    dy = -1;
-                    break;
-            }
-
-            Wind wind = new Wind(windSpeed, dx, dy);
             SimulationConfig config = new SimulationConfig();
             config.setWind(wind);
 
@@ -376,12 +402,9 @@ public class Controller {
 
             displayManager = new DisplayManager(engine, canvas);
             createTimeline(speed);
-            double cellSize = 8;
 
-            double offsetX = (canvas.getWidth() - forest.getWidth() * cellSize) / 2;
-            double offsetY = (canvas.getHeight() - forest.getHeight() * cellSize) / 2;
+            centerCameraOnForest();
 
-            displayManager.getCamera().setPosition(offsetX, offsetY);
             displayManager.updateDisplay();
 
         } catch (NumberFormatException e) {

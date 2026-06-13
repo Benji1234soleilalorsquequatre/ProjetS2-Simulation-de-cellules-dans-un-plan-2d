@@ -43,27 +43,63 @@ public class Cell {
         return copy;
     }
 
+   
     // ===== VEGETATION =====
-    public Vegetation getVegetation() { return this.vegetation; }
-    public void setVegetation(Vegetation vegetation) { this.vegetation = vegetation; }
+    public Vegetation getVegetation() {
+        return this.vegetation;
+    }
 
+    public void setVegetation(Vegetation vegetation) {
+        this.vegetation = vegetation;
+    }
+
+    
     // ===== STATE =====
-    public State getState() { return state; }
-    public void setState(State state) { this.state = state; }
-    public boolean isWet() { return state == State.WET; }
+    public State getState() {
+        return state;
+    }
 
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public boolean isWet() {
+        return state == State.WET;
+    }
+
+   
     // ===== DATA =====
-    public int getHumidity() { return humidity; }
-    public void setHumidity(int humidity) { this.humidity = humidity; }
+    public int getHumidity() {
+        return humidity;
+    }
 
-    public int getHeat() { return heat; }
-    public void setHeat(int heat) { this.heat = heat; }
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
+    }
 
-    public int getFuel() { return fuel; }
-    public void setFuel(int fuel) { this.fuel = fuel; }
+    public int getHeat() {
+        return heat;
+    }
 
-    public int getWetTime() { return wetTime; }
-    public void setWetTime(int wetTime) { this.wetTime = wetTime; }
+    public void setHeat(int heat) {
+        this.heat = heat;
+    }
+
+    public int getFuel() {
+        return fuel;
+    }
+
+    public void setFuel(int fuel) {
+        this.fuel = fuel;
+    }
+
+    public int getWetTime() {
+        return wetTime;
+    }
+
+    public void setWetTime(int wetTime) {
+        this.wetTime = wetTime;
+    }
 
     // ===== FIRE =====
 
