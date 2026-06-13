@@ -34,6 +34,8 @@ public class Controller {
     @FXML private Label humidityLabel;
     @FXML private Label heatLabel;
     @FXML private Label fuelLabel;
+    @FXML private TextField inputGridWidth;
+    @FXML private TextField inputGridHeight;
    
 
     private Timeline timeline;
@@ -238,10 +240,16 @@ public class Controller {
             int minFuel = Integer.parseInt(inputMinFuel.getText());
             int maxHum = Integer.parseInt(inputMaxHumidity.getText());
             int maxFuel = Integer.parseInt(inputMaxFuel.getText());
+            int gridWidth= Integer.parseInt(inputGridWidth.getText());
+            int gridHeight= Integer.parseInt(inputGridHeight.getText());
+
+            gridHeight= Math.max(10, Math.min(200, gridHeight));
+            gridWidth=Math.max(10,Math.min(200,gridWidth));
+            
 
 
-            forest = new Grid(70, 70, minHum, minFuel, maxHum, maxFuel);
-            forest.setCellState(24, 24, State.BURNING);
+            forest = new Grid(gridHeight, gridWidth, minHum, minFuel, maxHum, maxFuel);
+            forest.setCellState(gridHeight/2,gridWidth/2, State.BURNING);
 
             engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
             displayManager = new DisplayManager(engine, canvas);

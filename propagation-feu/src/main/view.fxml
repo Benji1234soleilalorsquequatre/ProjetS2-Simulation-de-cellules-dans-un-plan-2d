@@ -23,7 +23,7 @@
    </bottom>
    <center>
       <HBox alignment="CENTER">
-         <Canvas fx:id="canvas" height="850.0" width="1700.0" />
+         <Canvas fx:id="canvas" height="600.0" width="600.0" BorderPane.alignment="CENTER" />
       </HBox>
    </center>
    <right>
@@ -33,6 +33,10 @@
          <Label fx:id="heatLabel" />
          <Label fx:id="fuelLabel" />
          <Label text="Configuration" styleClass="label-title"/>
+         <Label text="Grid's width" />
+         <TextField fx:id= "inputGridWidth" text="50"/>
+         <Label text="Grid's height" />
+         <TextField fx:id="inputGridHeight" text="50"/>
          <Label text="Humidité Min :" />
          <TextField fx:id="inputMinHumidity" text="10" prefWidth="80.0"/>
 
