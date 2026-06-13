@@ -14,6 +14,9 @@ import model.Grid;
 import model.State;
 import model.Cell;
 import model.Wind;
+import simulation.FirePropagationAlgorithm;
+import simulation.NaiveFireAlgorithm;
+import simulation.AdvancedFireAlgorithm;
 import simulation.PreventionFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
@@ -43,6 +46,7 @@ public class Controller {
     @FXML private TextField inputGridHeight;
     @FXML private TextField inputWindSpeed;
     @FXML private ComboBox<String> windDirectionCombo;
+    @FXML private ComboBox<String> algorithmComboBox;
   
    
 
@@ -64,13 +68,17 @@ public class Controller {
     @FXML
     public void initialize() {
         
+        algorithmComboBox.getItems().setAll("Naive", "Advanced", "Prevention");
+
+        algorithmComboBox.setValue("Prevention");
+
         createTimeline(200);
 
         forest = new Grid(70, 70);
         forest.setCellState(35, 35, State.BURNING); // Foyer initial
         windDirectionCombo.setValue("Nord");
         
-        engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
+        engine = new SimulationEngine(forest, createSelectedAlgorithm(), new SimulationConfig());
         displayManager = new DisplayManager(engine, canvas);
 
         double cellSize = 8;
@@ -247,6 +255,34 @@ public class Controller {
     }
 
     /**
+     * Creates the fire propagation algorithm selected by the user.
+     * <p>
+     * This method applies the Strategy pattern. The simulation engine receives
+     * a FirePropagationAlgorithm without needing to know which concrete algorithm
+     * was selected in the graphical interface.
+     * </p>
+     *
+     * @return The fire propagation algorithm selected by the user.
+     */
+    private FirePropagationAlgorithm createSelectedAlgorithm() {
+        String selectedAlgorithm = algorithmComboBox.getValue();
+
+        if ("Naive".equals(selectedAlgorithm)) {
+            return new NaiveFireAlgorithm();
+        }
+
+        if ("Advanced".equals(selectedAlgorithm)) {
+            return new AdvancedFireAlgorithm();
+        }
+
+        if ("Prevention".equals(selectedAlgorithm)) {
+            return new PreventionFireAlgorithm();
+        }
+
+        return new PreventionFireAlgorithm();
+    }
+
+    /**
      * Stoppe la simulation en cours et génère une toute nouvelle forêt 
      * en utilisant les paramètres saisis par l'utilisateur.
      */
@@ -318,10 +354,11 @@ public class Controller {
 
 
             forest = new Grid(gridHeight, gridWidth, minHum, minFuel, maxHum, maxFuel, heat);
-            forest.setCellState(gridHeight/2,gridWidth/2, State.BURNING);
+            forest.setCellState(gridHeight / 2, gridWidth / 2, State.BURNING);
 
-            engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), config);
-            
+            FirePropagationAlgorithm selectedAlgorithm = createSelectedAlgorithm();
+            engine = new SimulationEngine(forest, selectedAlgorithm, config);
+
             displayManager = new DisplayManager(engine, canvas);
             createTimeline(speed);
             double cellSize = 8;
