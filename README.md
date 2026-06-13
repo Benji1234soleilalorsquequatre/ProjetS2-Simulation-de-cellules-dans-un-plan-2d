@@ -337,7 +337,7 @@ Les scripts .ps1 sont destinés à Windows PowerShell.
 Pour Linux/macOS/Git Bash, utiliser les commandes Bash ou les scripts .sh équivalents.
 
 
-## 10. Javadoc
+## 11. Javadoc
 Pour accéder à la javadoc, il suffit d'ouvrir:
 - le dossier Docs 
 - Puis d'ouvrir index.html dans un navigateur
