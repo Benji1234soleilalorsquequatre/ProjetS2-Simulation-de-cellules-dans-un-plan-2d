@@ -90,7 +90,7 @@ public class Controller {
             engine.step();
             displayManager.updateDisplay();
 
-            if (!displayManager.containsFire()) {
+            if (!engine.getCurrentGrid().containsFire()) {
                 timeline.stop();
                 running = false;
                 startButton.setText("Start");
@@ -240,7 +240,7 @@ public class Controller {
         engine.step();
         displayManager.updateDisplay();
 
-        if (!displayManager.containsFire()) {
+        if (!engine.getCurrentGrid().containsFire()) {
             running = false;
             startButton.setText("Start");
         }

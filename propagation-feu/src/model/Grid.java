@@ -124,6 +124,23 @@ public class Grid {
         }
     }
 
+     /**
+     * Checks whether there is at least one burning cell in the grid.
+     *
+     * @return true if at least one cell is burning, false otherwise.
+     */
+    
+    public boolean containsFire() {
+        for (int row = 0; row < getHeight(); row++) {
+            for (int col = 0; col < getWidth(); col++) {
+                if (getCell(row, col).getState() == State.BURNING) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /** @return La hauteur de la grille. */
     public int getHeight() { return height; }
 
