@@ -29,6 +29,7 @@ public class Controller {
     @FXML private TextField inputMaxFuel;
     @FXML private Button canadairButton;
     @FXML private Button startButton;
+    @FXML private Button stepButton;
     @FXML private Label stateLabel;
     @FXML private Label humidityLabel;
     @FXML private Label heatLabel;
@@ -187,7 +188,32 @@ public class Controller {
             startButton.setText("Stop");
             running = true;
         }   
-    }   
+    }  
+    
+    /**
+     * Pauses the automatic simulation and advances the simulation by one step.
+     * <p>
+     * This method allows the user to inspect the simulation step by step. If the
+     * automatic timeline is running, it is paused before applying the next step.
+     * The canvas is then redrawn to display the new grid state.
+     * </p>
+     */
+    @FXML
+    private void stepSimulation() {
+        if (running) {
+            timeline.pause();
+            running = false;
+            startButton.setText("Start");
+        }
+
+        engine.step();
+        displayManager.updateDisplay();
+
+        if (!displayManager.containsFire()) {
+            running = false;
+            startButton.setText("Start");
+        }
+    }
 
     /**
      * Stoppe la simulation en cours et génère une toute nouvelle forêt 
