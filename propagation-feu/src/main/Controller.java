@@ -18,9 +18,10 @@ import simulation.PreventionFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
 import display.DisplayManager;
+
 /**
- * Contrôleur JavaFX qui gère les interactions de l'utilisateur avec l'interface.
- * Fait le lien entre l'affichage (DisplayManager) et le moteur logique (SimulationEngine).
+ * JavaFX controller that manages user interactions with the interface.
+ * Acts as a bridge between the display (DisplayManager) and the logical engine (SimulationEngine).
  */
 public class Controller {
 
@@ -43,8 +44,6 @@ public class Controller {
     @FXML private TextField inputGridHeight;
     @FXML private TextField inputWindSpeed;
     @FXML private ComboBox<String> windDirectionCombo;
-  
-   
 
     private Timeline timeline;
     private boolean running = false;
@@ -58,16 +57,15 @@ public class Controller {
     private boolean mouseMovedDuringDrag = false;
 
     /**
-     * Méthode appelée automatiquement au démarrage de l'application.
-     * Configure la boucle d'animation temporelle (Timeline) et initialise la première forêt.
+     * Method called automatically when the application starts.
+     * Configures the animation loop (Timeline) and initializes the first forest.
      */
     @FXML
     public void initialize() {
-        
         createTimeline(200);
 
         forest = new Grid(70, 70);
-        forest.setCellState(35, 35, State.BURNING); // Foyer initial
+        forest.setCellState(35, 35, State.BURNING); // Initial fire source
         windDirectionCombo.setValue("Nord");
         
         engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
@@ -97,7 +95,7 @@ public class Controller {
             }
         }));
 
-    timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(Timeline.INDEFINITE);
     }
 
     /**
@@ -120,9 +118,7 @@ public class Controller {
         }
 
         if (canadairMode) {
-
             int radius = Integer.parseInt(inputCanadairRadius.getText());
-
             radius = Math.max(1, Math.min(10, radius));
 
             displayManager.dropWater(row, col, radius);
@@ -142,7 +138,7 @@ public class Controller {
     }
 
     /**
-     * Active le mode ciblage du Canadair pour le prochain clic sur la grille.
+     * Activates the Canadair targeting mode for the next click on the grid.
      */
     @FXML
     private void activateCanadair() {
@@ -206,7 +202,7 @@ public class Controller {
     }
     
     /**
-     * Met en pause ou relance la simulation automatique.
+     * Pauses or resumes the automatic simulation.
      */
     @FXML
     private void startSimulation() {
@@ -247,8 +243,8 @@ public class Controller {
     }
 
     /**
-     * Stoppe la simulation en cours et génère une toute nouvelle forêt 
-     * en utilisant les paramètres saisis par l'utilisateur.
+     * Stops the current simulation and generates a brand new forest
+     * using the parameters entered by the user.
      */
     @FXML
     private void handleResetSimulation() {
@@ -261,8 +257,8 @@ public class Controller {
             int minFuel = Integer.parseInt(inputMinFuel.getText());
             int maxHum = Integer.parseInt(inputMaxHumidity.getText());
             int maxFuel = Integer.parseInt(inputMaxFuel.getText());
-            int gridWidth= Integer.parseInt(inputGridWidth.getText());
-            int gridHeight= Integer.parseInt(inputGridHeight.getText());
+            int gridWidth = Integer.parseInt(inputGridWidth.getText());
+            int gridHeight = Integer.parseInt(inputGridHeight.getText());
             int heat = Integer.parseInt(inputHeat.getText());
             int windSpeed = Integer.parseInt(inputWindSpeed.getText());
             String windDirection = windDirectionCombo.getValue(); 
@@ -306,19 +302,16 @@ public class Controller {
             }
 
             Wind wind = new Wind(windSpeed, dx, dy);
-
             SimulationConfig config = new SimulationConfig();
-
             config.setWind(wind);
 
-            gridHeight= Math.max(10, Math.min(200, gridHeight));
-            gridWidth=Math.max(10,Math.min(200,gridWidth));
+            gridHeight = Math.max(10, Math.min(200, gridHeight));
+            gridWidth = Math.max(10, Math.min(200, gridWidth));
             
             int speed = Integer.parseInt(inputSpeed.getText());
 
-
             forest = new Grid(gridHeight, gridWidth, minHum, minFuel, maxHum, maxFuel, heat);
-            forest.setCellState(gridHeight/2,gridWidth/2, State.BURNING);
+            forest.setCellState(gridHeight/2, gridWidth/2, State.BURNING);
 
             engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), config);
             
@@ -333,7 +326,7 @@ public class Controller {
             displayManager.updateDisplay();
 
         } catch (NumberFormatException e) {
-            System.out.println("Erreur : Veuillez entrer des nombres valides dans les cases !");
+            System.out.println("Error: Please enter valid numbers in the input fields!");
         }
     }
 }

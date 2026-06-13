@@ -25,7 +25,6 @@ public class Grid {
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-
                 Vegetation vegetation = (Math.random() < 0.3) ? Vegetation.BRUSHWOOD : Vegetation.TREE;
                 int randomHumidity;
                 int randomFuel;
@@ -56,10 +55,11 @@ public class Grid {
      * @param minFuelTree       Minimum fuel amount for trees (0-100)
      * @param maxHumidityTree   Maximum humidity percentage for trees (0-100)
      * @param maxFuelTree       Maximum fuel amount for trees (0-100)
+     * @param heat              The heat parameter
      */
     public Grid(int height, int width, int minHumidityTree, int minFuelTree, int maxHumidityTree, int maxFuelTree, int heat) {
         
-        // 1. VALIDATION : Arrête le programme si les données reçues de l'IHM sont illogiques
+        // 1. VALIDATION: Stops the program if the data received from the GUI is illogical
         if (minFuelTree > maxFuelTree) {
             throw new IllegalArgumentException("Configuration error: minFuelTree ("
                 + minFuelTree + ") cannot exceed maxFuelTree (" + maxFuelTree + ").");
@@ -79,7 +79,6 @@ public class Grid {
                 int randomHumidity;
                 int randomFuel;
 
-                // Default bounds (applied directly for TREE)
                 int currentMinFuel = minFuelTree;
                 int currentMaxFuel = maxFuelTree;
                 int currentMinHumidity = minHumidityTree;
@@ -87,26 +86,21 @@ public class Grid {
 
                 // 2. BRUSHWOOD ADAPTATION: Proportional reduction of averages
                 if (vegetation == Vegetation.BRUSHWOOD) {
-                    // Brushwood has on average 80% of a tree's fuel
                     if(maxFuelTree*0.80 < minFuelTree){
                         currentMaxFuel = minFuelTree;
-                    }
-                    else{
+                    } else {
                         currentMaxFuel = (int) (maxFuelTree * 0.80);
                     }
                     currentMinFuel = minFuelTree;
 
-                    // Brushwood is drier, retains 80% of a tree's humidity
                     if(maxHumidityTree*0.80 < minHumidityTree){
                         currentMaxHumidity = minHumidityTree;
-                    }
-                    else{
+                    } else {
                         currentMaxHumidity = (int) (maxHumidityTree * 0.80);
                     }
                     currentMinHumidity = minHumidityTree;
                 }
 
-                // 3. RANDOM CALCULATION (Handles robustly when range is 0)
                 int fuelRange = currentMaxFuel - currentMinFuel;
                 randomFuel = currentMinFuel + (fuelRange > 0 ? (int)(Math.random() * fuelRange) : 0);
 
@@ -124,15 +118,11 @@ public class Grid {
         }
     }
 
-<<<<<<< HEAD
-    /** @return The height of the grid */
-=======
-     /**
+    /**
      * Checks whether there is at least one burning cell in the grid.
      *
      * @return true if at least one cell is burning, false otherwise.
      */
-    
     public boolean containsFire() {
         for (int row = 0; row < getHeight(); row++) {
             for (int col = 0; col < getWidth(); col++) {
@@ -144,8 +134,7 @@ public class Grid {
         return false;
     }
 
-    /** @return La hauteur de la grille. */
->>>>>>> 46b8f3d30f2852dc41c3c2dae8636e2793f11a19
+    /** @return The height of the grid. */
     public int getHeight() { return height; }
 
     /** @return The width of the grid */
@@ -250,4 +239,3 @@ public class Grid {
         }
     }
 }
-
