@@ -85,13 +85,4 @@ public class SimulationEngine {
     public int getStepCounter() {
         return stepCounter;
     }
-
-    /**
-     * Permet de changer l'algorithme de propagation en cours de route.
-     *
-     * @param algorithm Le nouvel algorithme à appliquer.
-     */
-    public void setAlgorithm(FirePropagationAlgorithm algorithm) {
-        this.algorithm = algorithm;
-    }
 }
