@@ -77,11 +77,6 @@ public class Cell {
     public void setVegetation(Vegetation vegetation) {
         this.vegetation = vegetation;
     }
-
-    public void setVegetation(Vegetation vegetation) {
-        this.vegetation = vegetation;
-    }
-
     
     // ===== STATE =====
 
@@ -108,14 +103,6 @@ public class Cell {
      *
      * @return true if the cell is in the WET state, false otherwise.
      */
-    public boolean isWet() {
-        return state == State.WET;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
     public boolean isWet() {
         return state == State.WET;
     }

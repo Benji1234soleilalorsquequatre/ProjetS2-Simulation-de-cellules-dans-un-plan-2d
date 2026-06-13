@@ -1,35 +1,34 @@
-# Script de compilation et lancement de la version console
+# Script to compile and launch the console version
 
-Write-Host "=== Compilation version console ==="
+Write-Host "=== Compilation console version ==="
 
-# Nettoyage du dossier out
+# Clean the out directory
 Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force out | Out-Null
 
-# Récupération des fichiers Java nécessaires pour la console
-# On exclut uniquement les fichiers JavaFX, mais on garde ConsoleMain.java
-$files = Get-ChildItem -Recurse -Filter *.java src |
-    Where-Object {
-        $_.FullName -notmatch "\\src\\main\\Main\.java$" -and
-        $_.FullName -notmatch "\\src\\main\\Controller\.java$"
-    } |
-    ForEach-Object { $_.FullName }
+# Retrieve the Java files required for the console version
+# Only JavaFX files are excluded, while ConsoleMain.java is kept
+$files = @()
 
-# Vérification
+$files += Get-ChildItem -Path .\src\model -Recurse -Filter *.java | ForEach-Object { $_.FullName }
+$files += Get-ChildItem -Path .\src\simulation -Recurse -Filter *.java | ForEach-Object { $_.FullName }
+$files += ".\src\main\ConsoleMain.java"
+
+# Check that at least one Java file was found
 if ($files.Count -eq 0) {
-    Write-Host "Erreur : aucun fichier Java trouvé pour la version console." -ForegroundColor Red
+    Write-Host "Error: no Java file found for the console version." -ForegroundColor Red
     exit 1
 }
 
-# Compilation
+# Compile the console version
 javac -d out $files
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Erreur pendant la compilation." -ForegroundColor Red
+    Write-Host "Error during compilation." -ForegroundColor Red
     exit $LASTEXITCODE
 }
 
-Write-Host "=== Lancement version console ==="
+Write-Host "=== Launching console version ==="
 
-# Lancement du main console
+# Launch the console main class
 java -cp out main.ConsoleMain

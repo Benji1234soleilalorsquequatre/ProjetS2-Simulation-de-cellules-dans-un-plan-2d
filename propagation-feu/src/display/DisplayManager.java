@@ -200,12 +200,6 @@ public class DisplayManager {
             case ASH:
                 return Color.DARKGRAY;
 
-            case FIREBREAK:
-                return Color.BROWN;
-
-            case EMPTY:
-                return Color.WHITE;
-
             case WET:
                 return Color.LIGHTBLUE;
 
