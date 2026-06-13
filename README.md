@@ -16,16 +16,47 @@ La simulation peut prendre en compte différents paramètres comme :
 ## Structure du projet
 
 ```text
-propagation-feu/
-├── src/
-│   ├── model/                     # Classes représentant la grille et les cellules
-│   ├── simulation/                # Moteur de simulation et algorithmes
-│   └── main/                      # Application JavaFX
-│       ├── ConsoleMain.java       # Point d'entrée console
-│       ├── Main.java
-│       ├── Controller.java
-│       └── view.fxml
-└── .gitignore
+ProjetS2-Simulation-de-cellules-dans-un-plan-2d-main/
+│
+├── README.md
+├── Rapport simulation 2D propagation de feu.pdf
+│
+└── propagation-feu/
+    │
+    ├── src/
+    │   ├── display/
+    │   │   ├── Camera.java
+    │   │   └── DisplayManager.java
+    │   │
+    │   ├── model/
+    │   │   ├── Cell.java
+    │   │   ├── Grid.java
+    │   │   ├── State.java
+    │   │   ├── Vegetation.java
+    │   │   └── Wind.java
+    │   │
+    │   ├── simulation/
+    │   │   ├── AdvancedFireAlgorithm.java
+    │   │   ├── FirePropagationAlgorithm.java
+    │   │   ├── NaiveFireAlgorithm.java
+    │   │   ├── PreventionFireAlgorithm.java
+    │   │   ├── SimulationConfig.java
+    │   │   └── SimulationEngine.java
+    │   │
+    │   └── main/
+    │       ├── Main.java
+    │       ├── Controller.java
+    │       ├── ConsoleMain.java
+    │       └── view.fxml
+    │
+    ├── docs/
+    │   ├── index.html
+    │   ├── model/
+    │   ├── simulation/
+    │   ├── display/
+    │   └── main/
+    │
+    └── .gitignore
 ```
 
 ## Installation et lancement du projet
