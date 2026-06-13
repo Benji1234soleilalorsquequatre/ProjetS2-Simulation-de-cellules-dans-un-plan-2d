@@ -27,6 +27,7 @@ public class Controller {
     @FXML private TextField inputMinFuel;
     @FXML private TextField inputMaxHumidity;
     @FXML private TextField inputMaxFuel;
+    @FXML private TextField inputSpeed;
     @FXML private Button canadairButton;
     @FXML private Button startButton;
     @FXML private Button stepButton;
@@ -34,6 +35,7 @@ public class Controller {
     @FXML private Label humidityLabel;
     @FXML private Label heatLabel;
     @FXML private Label fuelLabel;
+  
    
 
     private Timeline timeline;
@@ -53,17 +55,8 @@ public class Controller {
      */
     @FXML
     public void initialize() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(200), e -> {
-            engine.step();
-            displayManager.updateDisplay();
-
-            if (!displayManager.containsFire()) {
-                timeline.stop();
-                running = false;
-                startButton.setText("Start");
-            }
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        
+        createTimeline(200);
 
         forest = new Grid(70, 70);
         forest.setCellState(24, 24, State.BURNING); // Foyer initial
@@ -81,6 +74,21 @@ public class Controller {
         setupCanvasControls();
 
         displayManager.updateDisplay();
+    }
+
+    private void createTimeline(double speed) {
+        timeline = new Timeline(new KeyFrame(Duration.millis(speed), e -> {
+            engine.step();
+            displayManager.updateDisplay();
+
+            if (!displayManager.containsFire()) {
+                timeline.stop();
+                running = false;
+                startButton.setText("Start");
+            }
+        }));
+
+    timeline.setCycleCount(Timeline.INDEFINITE);
     }
 
     /**
@@ -238,6 +246,7 @@ public class Controller {
             int minFuel = Integer.parseInt(inputMinFuel.getText());
             int maxHum = Integer.parseInt(inputMaxHumidity.getText());
             int maxFuel = Integer.parseInt(inputMaxFuel.getText());
+            int speed = Integer.parseInt(inputSpeed.getText());
 
 
             forest = new Grid(70, 70, minHum, minFuel, maxHum, maxFuel);
@@ -245,6 +254,13 @@ public class Controller {
 
             engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
             displayManager = new DisplayManager(engine, canvas);
+            createTimeline(speed);
+            double cellSize = 8;
+
+            double offsetX = (canvas.getWidth() - forest.getWidth() * cellSize) / 2;
+            double offsetY = (canvas.getHeight() - forest.getHeight() * cellSize) / 2;
+
+            displayManager.getCamera().setPosition(offsetX, offsetY);
             displayManager.updateDisplay();
 
         } catch (NumberFormatException e) {
