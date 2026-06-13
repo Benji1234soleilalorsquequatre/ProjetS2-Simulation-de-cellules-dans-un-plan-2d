@@ -16,14 +16,13 @@ import simulation.PreventionFireAlgorithm;
 import simulation.SimulationConfig;
 import simulation.SimulationEngine;
 import display.DisplayManager;
-
 /**
- * JavaFX controller managing user interactions with the interface.
- * Bridges the display (DisplayManager) and simulation logic (SimulationEngine).
+ * Contrôleur JavaFX qui gère les interactions de l'utilisateur avec l'interface.
+ * Fait le lien entre l'affichage (DisplayManager) et le moteur logique (SimulationEngine).
  */
 public class Controller {
 
-    @FXML private Canvas canvas;
+    @FXML private Canvas canvas; 
     @FXML private TextField inputMinHumidity;
     @FXML private TextField inputMinFuel;
     @FXML private TextField inputMaxHumidity;
@@ -40,6 +39,8 @@ public class Controller {
     @FXML private Label fuelLabel;
     @FXML private TextField inputGridWidth;
     @FXML private TextField inputGridHeight;
+  
+   
 
     private Timeline timeline;
     private boolean running = false;
@@ -53,17 +54,17 @@ public class Controller {
     private boolean mouseMovedDuringDrag = false;
 
     /**
-     * Called automatically when the application starts.
-     * Sets up the animation loop and initializes the first forest grid.
+     * Méthode appelée automatiquement au démarrage de l'application.
+     * Configure la boucle d'animation temporelle (Timeline) et initialise la première forêt.
      */
     @FXML
     public void initialize() {
-
+        
         createTimeline(200);
 
         forest = new Grid(70, 70);
-        forest.setCellState(24, 24, State.BURNING); // Initial fire source
-
+        forest.setCellState(35, 35, State.BURNING); // Foyer initial
+        
         engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
         displayManager = new DisplayManager(engine, canvas);
 
@@ -79,11 +80,6 @@ public class Controller {
         displayManager.updateDisplay();
     }
 
-    /**
-     * Creates the animation timeline that drives the simulation.
-     *
-     * @param speed The milliseconds between each simulation step
-     */
     private void createTimeline(double speed) {
         timeline = new Timeline(new KeyFrame(Duration.millis(speed), e -> {
             engine.step();
@@ -96,14 +92,17 @@ public class Controller {
             }
         }));
 
-        timeline.setCycleCount(Timeline.INDEFINITE);
+    timeline.setCycleCount(Timeline.INDEFINITE);
     }
 
     /**
      * Handles mouse clicks on the grid.
-     * Depending on the current mode, displays cell information or drops water.
+     * <p>
+     * Depending on the current mode, this method either displays the clicked
+     * cell information or drops water on the selected area.
+     * </p>
      *
-     * @param event The mouse event containing the click coordinates
+     * @param event The mouse event containing the click coordinates.
      */
     public void handleCanvasClick(MouseEvent event) {
         int col = displayManager.getColFromScreenX(event.getX());
@@ -131,27 +130,30 @@ public class Controller {
 
         Cell cell = currentGrid.getCell(row, col);
 
-        stateLabel.setText("State: " + cell.getState());
-        humidityLabel.setText("Humidity: " + cell.getHumidity());
-        heatLabel.setText("Heat: " + cell.getHeat());
-        fuelLabel.setText("Fuel: " + cell.getFuel());
+        stateLabel.setText("État : " + cell.getState());
+        humidityLabel.setText("Humidité : " + cell.getHumidity());
+        heatLabel.setText("Chaleur : " + cell.getHeat());
+        fuelLabel.setText("Combustible : " + cell.getFuel());
     }
 
     /**
-     * Activates Canadair mode for the next grid click.
-     * Allows the user to drop water on a selected area.
+     * Active le mode ciblage du Canadair pour le prochain clic sur la grille.
      */
     @FXML
     private void activateCanadair() {
         if (!running) {
             canadairMode = true;
-            canadairButton.setText("Select area");
+            canadairButton.setText("Choisir une zone");
         }
     }
 
     /**
-     * Configures mouse controls for the canvas.
-     * Left-click drag moves the map, mouse wheel zooms, single clicks interact with cells.
+     * Configures the mouse controls used on the canvas.
+     * <p>
+     * The user can drag the map with the left mouse button, zoom with the
+     * mouse wheel and click on a cell to display its information or drop water
+     * when Canadair mode is enabled.
+     * </p>
      */
     private void setupCanvasControls() {
         canvas.setOnMousePressed(event -> {
@@ -197,9 +199,9 @@ public class Controller {
             event.consume();
         });
     }
-
+    
     /**
-     * Pauses or resumes the automatic simulation.
+     * Met en pause ou relance la simulation automatique.
      */
     @FXML
     private void startSimulation() {
@@ -211,12 +213,16 @@ public class Controller {
             timeline.play();
             startButton.setText("Stop");
             running = true;
-        }
-    }
-
+        }   
+    }  
+    
     /**
-     * Advances the simulation by one step and pauses automatic playback.
-     * Allows step-by-step inspection of the simulation.
+     * Pauses the automatic simulation and advances the simulation by one step.
+     * <p>
+     * This method allows the user to inspect the simulation step by step. If the
+     * automatic timeline is running, it is paused before applying the next step.
+     * The canvas is then redrawn to display the new grid state.
+     * </p>
      */
     @FXML
     private void stepSimulation() {
@@ -236,8 +242,8 @@ public class Controller {
     }
 
     /**
-     * Stops the current simulation and generates a new forest
-     * using user-specified parameters.
+     * Stoppe la simulation en cours et génère une toute nouvelle forêt 
+     * en utilisant les paramètres saisis par l'utilisateur.
      */
     @FXML
     private void handleResetSimulation() {
@@ -254,6 +260,9 @@ public class Controller {
             int gridHeight= Integer.parseInt(inputGridHeight.getText());
             int heat = Integer.parseInt(inputHeat.getText());
 
+            gridHeight= Math.max(10, Math.min(200, gridHeight));
+            gridWidth=Math.max(10,Math.min(200,gridWidth));
+            
             int speed = Integer.parseInt(inputSpeed.getText());
 
 
@@ -272,7 +281,7 @@ public class Controller {
             displayManager.updateDisplay();
 
         } catch (NumberFormatException e) {
-            System.out.println("Error: Please enter valid numbers in all fields!");
+            System.out.println("Erreur : Veuillez entrer des nombres valides dans les cases !");
         }
     }
 }
