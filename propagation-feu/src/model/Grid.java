@@ -1,9 +1,9 @@
 package model;
 
 /**
- * Représente la matrice 2D de la forêt.
- * Contient toutes les cellules et gère la génération aléatoire de la végétation
- * (Grands arbres et Broussailles) lors de son initialisation.
+ * Represents the 2D matrix of the forest.
+ * Contains all cells and manages random generation of vegetation
+ * (Trees and Brushwood) during initialization.
  */
 public class Grid {
 
@@ -12,11 +12,11 @@ public class Grid {
     private int width;
 
     /**
-     * Constructeur par défaut. Génère une forêt avec des valeurs d'humidité
-     * et de combustible générées aléatoirement selon le type de végétation.
+     * Default constructor. Generates a forest with humidity and fuel values
+     * randomly generated according to vegetation type.
      *
-     * @param height Le nombre de lignes de la grille.
-     * @param width Le nombre de colonnes de la grille.
+     * @param height The number of rows in the grid
+     * @param width  The number of columns in the grid
      */
     public Grid(int height, int width) {
         this.height = height;
@@ -31,11 +31,11 @@ public class Grid {
                 int randomFuel;
 
                 if (vegetation == Vegetation.TREE) {
-                    randomFuel = 50 + (int)(Math.random() * 51); 
-                    randomHumidity = 10 + (int)(Math.random() * 21); 
+                    randomFuel = 50 + (int)(Math.random() * 51);
+                    randomHumidity = 10 + (int)(Math.random() * 21);
                 } else {
-                    randomFuel = 10 + (int)(Math.random() * 11); 
-                    randomHumidity = 0 + (int)(Math.random() * 10); 
+                    randomFuel = 10 + (int)(Math.random() * 11);
+                    randomHumidity = 0 + (int)(Math.random() * 10);
                 }
 
                 this.forest[row][col] = new Cell(
@@ -46,27 +46,27 @@ public class Grid {
     }
 
     /**
-     * Constructeur personnalisé permettant de forcer les statistiques minimales et maximales des grands arbres.
-     * Les broussailles (BRUSHWOOD) verront leurs statistiques réduites proportionnellement (en moyenne).
-     * Utilisé pour redémarrer la simulation via l'interface graphique.
+     * Custom constructor allowing to force minimum and maximum statistics for large trees.
+     * Brushwood statistics are reduced proportionally on average.
+     * Used to restart the simulation through the GUI.
      *
-     * @param height Le nombre de lignes.
-     * @param width Le nombre de colonnes.
-     * @param minHumidityTree Le pourcentage d'humidité minimum pour les arbres (TREE).
-     * @param minFuelTree La quantité de bois minimale pour les arbres (TREE).
-     * @param maxHumidityTree Le pourcentage d'humidité maximum pour les arbres (TREE).
-     * @param maxFuelTree La quantité de bois maximale pour les arbres (TREE).
+     * @param height            The number of rows
+     * @param width             The number of columns
+     * @param minHumidityTree   Minimum humidity percentage for trees (0-100)
+     * @param minFuelTree       Minimum fuel amount for trees (0-100)
+     * @param maxHumidityTree   Maximum humidity percentage for trees (0-100)
+     * @param maxFuelTree       Maximum fuel amount for trees (0-100)
      */
     public Grid(int height, int width, int minHumidityTree, int minFuelTree, int maxHumidityTree, int maxFuelTree) {
-        
-        // 1. VALIDATION : Arrête le programme si les données reçues de l'IHM sont illogiques
+
+        // 1. VALIDATION: Stop if received data is illogical
         if (minFuelTree > maxFuelTree) {
-            throw new IllegalArgumentException("Erreur de configuration : minFuelTree (" 
-                + minFuelTree + ") ne peut pas être supérieur à maxFuelTree (" + maxFuelTree + ").");
+            throw new IllegalArgumentException("Configuration error: minFuelTree ("
+                + minFuelTree + ") cannot exceed maxFuelTree (" + maxFuelTree + ").");
         }
         if (minHumidityTree > maxHumidityTree) {
-            throw new IllegalArgumentException("Erreur de configuration : minHumidityTree (" 
-                + minHumidityTree + ") ne peut pas être supérieur à maxHumidityTree (" + maxHumidityTree + ").");
+            throw new IllegalArgumentException("Configuration error: minHumidityTree ("
+                + minHumidityTree + ") cannot exceed maxHumidityTree (" + maxHumidityTree + ").");
         }
 
         this.height = height;
@@ -79,41 +79,41 @@ public class Grid {
                 int randomHumidity;
                 int randomFuel;
 
-                // Bornes par défaut (appliquées directement si c'est un TREE)
+                // Default bounds (applied directly for TREE)
                 int currentMinFuel = minFuelTree;
                 int currentMaxFuel = maxFuelTree;
                 int currentMinHumidity = minHumidityTree;
                 int currentMaxHumidity = maxHumidityTree;
 
-                // 2. ADAPTATION POUR LA BROUSSAILLE : Réduction proportionnelle de la moyenne
+                // 2. BRUSHWOOD ADAPTATION: Proportional reduction of averages
                 if (vegetation == Vegetation.BRUSHWOOD) {
-                    // La broussaille possède en moyenne 40% du combustible d'un arbre
+                    // Brushwood has on average 80% of a tree's fuel
                     if(maxFuelTree*0.80 < minFuelTree){
                         currentMaxFuel = minFuelTree;
                     }
                     else{
-                    currentMaxFuel = (int) (maxFuelTree * 0.80);
+                        currentMaxFuel = (int) (maxFuelTree * 0.80);
                     }
                     currentMinFuel = minFuelTree;
 
-                    // La broussaille est plus sèche, elle conserve 60% de l'humidité d'un arbre
+                    // Brushwood is drier, retains 80% of a tree's humidity
                     if(maxHumidityTree*0.80 < minHumidityTree){
                         currentMaxHumidity = minHumidityTree;
                     }
                     else{
-                    currentMaxHumidity = (int) (maxHumidityTree * 0.80);
+                        currentMaxHumidity = (int) (maxHumidityTree * 0.80);
                     }
                     currentMinHumidity = minHumidityTree;
                 }
 
-                // 3. CALCUL DE L'ALÉATOIRE (Gère de manière robuste le cas où la plage vaut 0)
+                // 3. RANDOM CALCULATION (Handles robustly when range is 0)
                 int fuelRange = currentMaxFuel - currentMinFuel;
                 randomFuel = currentMinFuel + (fuelRange > 0 ? (int)(Math.random() * fuelRange) : 0);
-                
+
                 int humidityRange = currentMaxHumidity - currentMinHumidity;
                 randomHumidity = currentMinHumidity + (humidityRange > 0 ? (int)(Math.random() * humidityRange) : 0);
 
-                // 4. BRIDAGE DE SÉCURITÉ (Garantit des valeurs strictes entre 0% et 100%)
+                // 4. SAFETY CLAMPING (Guarantees strict values between 0% and 100%)
                 randomFuel = Math.max(0, Math.min(100, randomFuel));
                 randomHumidity = Math.max(0, Math.min(100, randomHumidity));
 
@@ -124,14 +124,18 @@ public class Grid {
         }
     }
 
-    /** @return La hauteur de la grille. */
+    /** @return The height of the grid */
     public int getHeight() { return height; }
 
-    /** @return La largeur de la grille. */
+    /** @return The width of the grid */
     public int getWidth() { return width; }
 
     /**
-     * Récupère une cellule à une position spécifique.
+     * Gets a cell at a specific position.
+     *
+     * @param row The row index
+     * @param col The column index
+     * @return The cell at the specified position, or null if out of bounds
      */
     public Cell getCell(int row, int col) {
         if (isInside(row, col)) {
@@ -141,7 +145,11 @@ public class Grid {
     }
 
     /**
-     * Modifie manuellement une cellule entière dans la grille.
+     * Manually replaces an entire cell in the grid.
+     *
+     * @param row  The row index
+     * @param col  The column index
+     * @param cell The new cell to place
      */
     public void setCell(int row, int col, Cell cell) {
         if (isInside(row, col)) {
@@ -150,7 +158,11 @@ public class Grid {
     }
 
     /**
-     * Modifie uniquement l'état (State) d'une cellule existante.
+     * Changes only the state of an existing cell.
+     *
+     * @param row   The row index
+     * @param col   The column index
+     * @param state The new state
      */
     public void setCellState(int row, int col, State state) {
         if (isInside(row, col)) {
@@ -159,14 +171,20 @@ public class Grid {
     }
 
     /**
-     * Vérifie si des coordonnées sont bien à l'intérieur des limites de la matrice.
+     * Checks if coordinates are within the grid bounds.
+     *
+     * @param row The row index
+     * @param col The column index
+     * @return true if coordinates are inside, false otherwise
      */
     public boolean isInside(int row, int col) {
         return row >= 0 && row < height && col >= 0 && col < width;
     }
 
     /**
-     * Crée un clone parfait et indépendant de la grille actuelle.
+     * Creates a perfect independent clone of the current grid.
+     *
+     * @return A new Grid with copied cells
      */
     public Grid copy() {
         Grid copiedGrid = new Grid(height, width);
@@ -179,6 +197,10 @@ public class Grid {
     }
 
     // ===== DISPLAY =====
+
+    /**
+     * Displays the grid on the console using ASCII characters.
+     */
     public void displayGrid() {
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
@@ -189,6 +211,12 @@ public class Grid {
         }
     }
 
+    /**
+     * Gets the ASCII symbol representing a cell state.
+     *
+     * @param state The cell state
+     * @return A single character representing the state
+     */
     private String getSymbolForState(State state) {
         switch (state) {
             case EMPTY: return ".";

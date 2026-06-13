@@ -1,9 +1,9 @@
 package model;
 
 /**
- * Représente une cellule (une case) unique dans la grille de la forêt.
- * Chaque cellule possède un état (Arbre, Feu, Cendre...), des caractéristiques
- * physiques (humidité, chaleur, combustible) et un type de végétation.
+ * Represents a single cell (grid square) in the forest simulation.
+ * Each cell has a state (Tree, Fire, Ash, etc.), physical characteristics
+ * (humidity, heat, fuel), and a vegetation type.
  */
 public class Cell {
 
@@ -16,13 +16,13 @@ public class Cell {
     private int wetTime = 0;
 
     /**
-     * Crée une nouvelle cellule avec ses propriétés de base.
+     * Creates a new cell with its basic properties.
      *
-     * @param state L'état initial de la cellule (ex: State.TREE).
-     * @param humidity Le pourcentage d'humidité (freine le feu).
-     * @param heat La chaleur accumulée (accélère le feu).
-     * @param fuel La quantité de bois disponible pour brûler.
-     * @param vegetation Le type de plante (Arbre ou Broussaille).
+     * @param state      The initial cell state (e.g., State.VEGETATION)
+     * @param humidity   The humidity percentage (0-100, inhibits fire spread)
+     * @param heat       The accumulated heat (0-100, accelerates fire)
+     * @param fuel       The amount of wood available to burn (0-100)
+     * @param vegetation The vegetation type (TREE or BRUSHWOOD)
      */
     public Cell(State state, int humidity, int heat, int fuel, Vegetation vegetation) {
         this.state = state;
@@ -33,8 +33,9 @@ public class Cell {
     }
 
     /**
-     * Crée une copie exacte et indépendante de la cellule.
-     * @return Une nouvelle instance de Cell avec les mêmes valeurs.
+     * Creates an exact independent copy of the cell.
+     *
+     * @return A new Cell instance with the same values
      */
     public Cell copy() {
         Cell copy = new Cell(state, humidity, heat, fuel, vegetation);
@@ -67,16 +68,17 @@ public class Cell {
     // ===== FIRE =====
 
     /**
-     * Vérifie si la cellule réunit les conditions physiques pour prendre feu.
-     * @return true si c'est un arbre vivant, avec du bois et pas totalement trempé.
+     * Checks if the cell meets physical conditions to catch fire.
+     *
+     * @return true if it has vegetation with fuel and is not completely saturated
      */
     public boolean canBurn() {
         return state == State.VEGETATION && fuel > 0 && humidity < 100;
     }
 
     /**
-     * Déclenche l'incendie sur cette cellule en modifiant son état et en
-     * propulsant sa chaleur au maximum.
+     * Ignites the cell if conditions allow, setting it to BURNING state
+     * and maximizing its heat.
      */
     public void ignite() {
         if (canBurn()) {

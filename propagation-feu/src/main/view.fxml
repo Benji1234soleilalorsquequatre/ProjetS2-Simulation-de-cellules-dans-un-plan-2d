@@ -33,9 +33,9 @@
          <Label fx:id="heatLabel" />
          <Label fx:id="fuelLabel" />
          <Label text="Configuration" styleClass="label-title"/>
-         <Label text="Grid's width" />
+         <Label text="Largeur" />
          <TextField fx:id= "inputGridWidth" text="50"/>
-         <Label text="Grid's height" />
+         <Label text="Longeur" />
          <TextField fx:id="inputGridHeight" text="50"/>
 
          <Label text="Vitesse de la simulation (ms) :" />
