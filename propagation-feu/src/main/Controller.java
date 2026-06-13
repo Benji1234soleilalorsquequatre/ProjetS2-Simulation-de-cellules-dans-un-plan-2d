@@ -41,7 +41,10 @@ public class Controller {
     private Grid forest;
     private SimulationEngine engine;
     private DisplayManager displayManager;
-    private final int CELL_SIZE = 8;
+    private double lastMouseX;
+    private double lastMouseY;
+    private boolean draggingCamera = false;
+    private boolean mouseMovedDuringDrag = false;
 
     /**
      * Méthode appelée automatiquement au démarrage de l'application.
@@ -66,38 +69,44 @@ public class Controller {
         
         engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
         displayManager = new DisplayManager(engine, canvas);
-        canvas.setOnMouseClicked(this::handleCanvasClick);
+        setupCanvasControls();
     
         displayManager.updateDisplay();
     }
 
     /**
-     * Gère les clics de la souris sur la grille.
-     * Permet de lire les statistiques d'une cellule ou de larguer l'eau du Canadair.
+     * Handles mouse clicks on the grid.
+     * <p>
+     * Depending on the current mode, this method either displays the clicked
+     * cell information or drops water on the selected area.
+     * </p>
      *
-     * @param event L'événement souris contenant les coordonnées du clic.
+     * @param event The mouse event containing the click coordinates.
      */
     public void handleCanvasClick(MouseEvent event) {
-        int col = (int) (event.getX() / CELL_SIZE);
-        int row = (int) (event.getY() / CELL_SIZE);
+        int col = displayManager.getColFromScreenX(event.getX());
+        int row = displayManager.getRowFromScreenY(event.getY());
 
         Grid currentGrid = engine.getCurrentGrid();
 
-        if (currentGrid.isInside(row, col)) {
-            if(canadairMode) {
-                displayManager.dropWater(row, col);
-                canadairMode = false;
-                canadairButton.setText("Canadair");
-                displayManager.updateDisplay();
-                return;
-            }       
-
-            Cell cell = currentGrid.getCell(row, col);
-            stateLabel.setText("État : " + cell.getState());
-            humidityLabel.setText("Humidité : " + cell.getHumidity());
-            heatLabel.setText("Chaleur : " + cell.getHeat());
-            fuelLabel.setText("Combustible : " + cell.getFuel());
+        if (!currentGrid.isInside(row, col)) {
+            return;
         }
+
+        if (canadairMode) {
+            displayManager.dropWater(row, col);
+            canadairMode = false;
+            canadairButton.setText("Canadair");
+            displayManager.updateDisplay();
+            return;
+        }
+
+        Cell cell = currentGrid.getCell(row, col);
+
+        stateLabel.setText("État : " + cell.getState());
+        humidityLabel.setText("Humidité : " + cell.getHumidity());
+        heatLabel.setText("Chaleur : " + cell.getHeat());
+        fuelLabel.setText("Combustible : " + cell.getFuel());
     }
 
     /**
@@ -111,6 +120,59 @@ public class Controller {
         }
     }
 
+    /**
+     * Configures the mouse controls used on the canvas.
+     * <p>
+     * The user can drag the map with the left mouse button, zoom with the
+     * mouse wheel and click on a cell to display its information or drop water
+     * when Canadair mode is enabled.
+     * </p>
+     */
+    private void setupCanvasControls() {
+        canvas.setOnMousePressed(event -> {
+            lastMouseX = event.getX();
+            lastMouseY = event.getY();
+            draggingCamera = true;
+            mouseMovedDuringDrag = false;
+        });
+
+        canvas.setOnMouseDragged(event -> {
+            if (!draggingCamera) {
+                return;
+            }
+
+            double deltaX = event.getX() - lastMouseX;
+            double deltaY = event.getY() - lastMouseY;
+
+            if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+                mouseMovedDuringDrag = true;
+            }
+
+            displayManager.moveCamera(deltaX, deltaY);
+            displayManager.updateDisplay();
+
+            lastMouseX = event.getX();
+            lastMouseY = event.getY();
+        });
+
+        canvas.setOnMouseReleased(event -> {
+            draggingCamera = false;
+
+            if (!mouseMovedDuringDrag) {
+                handleCanvasClick(event);
+            }
+        });
+
+        canvas.setOnScroll(event -> {
+            double zoomFactor = event.getDeltaY() > 0 ? 1.1 : 0.9;
+
+            displayManager.zoomCameraAt(zoomFactor, event.getX(), event.getY());
+            displayManager.updateDisplay();
+
+            event.consume();
+        });
+    }
+    
     /**
      * Met en pause ou relance la simulation automatique.
      */
