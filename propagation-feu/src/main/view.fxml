@@ -37,6 +37,10 @@
          <TextField fx:id= "inputGridWidth" text="50"/>
          <Label text="Grid's height" />
          <TextField fx:id="inputGridHeight" text="50"/>
+
+         <Label text="Vitesse de la simulation (ms) :" />
+         <TextField fx:id="inputSpeed" text="200" prefWidth="80.0"/>
+
          <Label text="Humidité Min :" />
          <TextField fx:id="inputMinHumidity" text="10" prefWidth="80.0"/>
 

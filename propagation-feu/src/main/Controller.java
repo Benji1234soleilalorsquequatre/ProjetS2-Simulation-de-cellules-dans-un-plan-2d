@@ -27,6 +27,7 @@ public class Controller {
     @FXML private TextField inputMinFuel;
     @FXML private TextField inputMaxHumidity;
     @FXML private TextField inputMaxFuel;
+    @FXML private TextField inputSpeed;
     @FXML private Button canadairButton;
     @FXML private Button startButton;
     @FXML private Button stepButton;
@@ -36,6 +37,7 @@ public class Controller {
     @FXML private Label fuelLabel;
     @FXML private TextField inputGridWidth;
     @FXML private TextField inputGridHeight;
+  
    
 
     private Timeline timeline;
@@ -55,17 +57,8 @@ public class Controller {
      */
     @FXML
     public void initialize() {
-        timeline = new Timeline(new KeyFrame(Duration.millis(200), e -> {
-            engine.step();
-            displayManager.updateDisplay();
-
-            if (!displayManager.containsFire()) {
-                timeline.stop();
-                running = false;
-                startButton.setText("Start");
-            }
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        
+        createTimeline(200);
 
         forest = new Grid(70, 70);
         forest.setCellState(24, 24, State.BURNING); // Foyer initial
@@ -83,6 +76,21 @@ public class Controller {
         setupCanvasControls();
 
         displayManager.updateDisplay();
+    }
+
+    private void createTimeline(double speed) {
+        timeline = new Timeline(new KeyFrame(Duration.millis(speed), e -> {
+            engine.step();
+            displayManager.updateDisplay();
+
+            if (!displayManager.containsFire()) {
+                timeline.stop();
+                running = false;
+                startButton.setText("Start");
+            }
+        }));
+
+    timeline.setCycleCount(Timeline.INDEFINITE);
     }
 
     /**
@@ -246,6 +254,7 @@ public class Controller {
             gridHeight= Math.max(10, Math.min(200, gridHeight));
             gridWidth=Math.max(10,Math.min(200,gridWidth));
             
+            int speed = Integer.parseInt(inputSpeed.getText());
 
 
             forest = new Grid(gridHeight, gridWidth, minHum, minFuel, maxHum, maxFuel);
@@ -253,6 +262,13 @@ public class Controller {
 
             engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
             displayManager = new DisplayManager(engine, canvas);
+            createTimeline(speed);
+            double cellSize = 8;
+
+            double offsetX = (canvas.getWidth() - forest.getWidth() * cellSize) / 2;
+            double offsetY = (canvas.getHeight() - forest.getHeight() * cellSize) / 2;
+
+            displayManager.getCamera().setPosition(offsetX, offsetY);
             displayManager.updateDisplay();
 
         } catch (NumberFormatException e) {
