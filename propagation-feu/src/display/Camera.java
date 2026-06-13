@@ -117,6 +117,11 @@ public class Camera {
         this.offsetY = 0.0;
     }
 
+    public void setPosition(double offsetX, double offsetY) {
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+    }
+
     /**
      * Returns the current zoom level.
      *

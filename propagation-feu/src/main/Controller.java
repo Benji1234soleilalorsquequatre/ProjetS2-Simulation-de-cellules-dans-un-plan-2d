@@ -70,8 +70,16 @@ public class Controller {
         
         engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
         displayManager = new DisplayManager(engine, canvas);
+
+        double cellSize = 8;
+
+        double offsetX = (canvas.getWidth() - forest.getWidth() * cellSize) / 2;
+        double offsetY = (canvas.getHeight() - forest.getHeight() * cellSize) / 2;
+
+        displayManager.getCamera().setPosition(offsetX, offsetY);
+
         setupCanvasControls();
-    
+
         displayManager.updateDisplay();
     }
 

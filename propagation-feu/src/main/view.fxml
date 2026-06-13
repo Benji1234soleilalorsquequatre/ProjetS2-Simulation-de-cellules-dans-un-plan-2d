@@ -12,15 +12,19 @@
 
    <top>
       <HBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER">
-         <Button fx:id="startButton" text="Start" onAction="#startSimulation" />
-         <Button fx:id="stepButton" text="Step" onAction="#stepSimulation" />
+         <Button fx:id="startButton" id="startButton" text="Start" onAction="#startSimulation" />
+         <Button fx:id="stepButton" id="stepButton" text="Step" onAction="#stepSimulation" />
       </HBox>
    </top>
    <bottom>
-      <Button fx:id="canadairButton" text="Canadair" onAction="#activateCanadair"/>
+      <HBox alignment="CENTER">
+         <Button fx:id="canadairButton" id="canadairButton" text="Canadair" onAction="#activateCanadair"/>
+      </HBox>
    </bottom>
    <center>
-      <Canvas fx:id="canvas" height="800.0" width="800.0" BorderPane.alignment="CENTER" />
+      <HBox alignment="CENTER">
+         <Canvas fx:id="canvas" height="850.0" width="1700.0" />
+      </HBox>
    </center>
    <right>
       <VBox spacing="5" BorderPane.alignment="CENTER">
@@ -28,7 +32,7 @@
          <Label fx:id="humidityLabel" />
          <Label fx:id="heatLabel" />
          <Label fx:id="fuelLabel" />
-         <Label text="=== Configuration ===" style="-fx-font-weight: bold;-fx-padding-top: 15;"/>
+         <Label text="Configuration" styleClass="label-title"/>
          <Label text="Humidité Min :" />
          <TextField fx:id="inputMinHumidity" text="10" prefWidth="80.0"/>
 

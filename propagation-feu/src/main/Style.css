@@ -1,0 +1,149 @@
+/* =========================
+   FOND GENERAL
+   ========================= */
+
+.root {
+    -fx-background-color: #1e1e2f;
+    -fx-font-family: "Segoe UI";
+}
+
+/* =========================
+   HBOX DU HAUT
+   ========================= */
+
+HBox {
+    -fx-background-color: #25253a;
+    -fx-padding: 15;
+    -fx-border-color: #3b3b58;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* =========================
+   VBOX DE DROITE
+   ========================= */
+
+VBox {
+    -fx-background-color: #25253a;
+    -fx-padding: 15;
+    -fx-border-color: #3b3b58;
+    -fx-border-width: 0 0 0 1;
+}
+
+/* =========================
+   LABELS
+   ========================= */
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+.label-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4fc3f7;
+    -fx-padding: 10 0 5 0;
+}
+
+/* =========================
+   CHAMPS DE SAISIE
+   ========================= */
+
+.text-field {
+    -fx-background-color: #34344e;
+    -fx-text-fill: white;
+    -fx-border-color: #4fc3f7;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.text-field:focused {
+    -fx-border-color: #81d4fa;
+}
+
+/* =========================
+   BOUTONS GENERAUX
+   ========================= */
+
+.button {
+    -fx-background-color: #4fc3f7;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+}
+
+.button:hover {
+    -fx-background-color: #29b6f6;
+}
+
+.button:pressed {
+    -fx-background-color: #039be5;
+}
+
+/* =========================
+   START
+   ========================= */
+
+#startButton {
+    -fx-background-color: #43a047;
+}
+
+#startButton:hover {
+    -fx-background-color: #2e7d32;
+}
+
+/* =========================
+   STEP
+   ========================= */
+
+#stepButton {
+    -fx-background-color: #ff9800;
+}
+
+#stepButton:hover {
+    -fx-background-color: #ef6c00;
+}
+
+/* =========================
+   CANADAIR
+   ========================= */
+
+#canadairButton {
+    -fx-background-color: #e53935;
+    -fx-text-fill: white;
+}
+
+#canadairButton:hover {
+    -fx-background-color: #c62828;
+}
+
+/* =========================
+   BOUTON DU BAS
+   ========================= */
+
+BorderPane > .bottom {
+    -fx-padding: 10;
+    -fx-background-color: #25253a;
+}
+
+/* =========================
+   CANVAS
+   ========================= */
+
+Canvas {
+    -fx-border-color: #4fc3f7;
+    -fx-border-width: 2;
+}
+
+/* =========================
+   ETIQUETTES D'INFOS
+   ========================= */
+
+#stateLabel,
+#humidityLabel,
+#heatLabel,
+#fuelLabel {
+    -fx-font-weight: bold;
+    -fx-text-fill: #e0e0e0;
+}

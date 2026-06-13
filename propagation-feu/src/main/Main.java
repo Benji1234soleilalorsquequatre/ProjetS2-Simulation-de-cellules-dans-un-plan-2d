@@ -19,12 +19,16 @@ public class Main extends Application {
 
         Scene scene = new Scene(loader.load());
 
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         stage.setTitle("Simulation Feu de Forêt");
 
         stage.setScene(scene);
 
         stage.show();
     }
+
+ 
 
     /** 
      * @param args

@@ -113,6 +113,10 @@ public class DisplayManager {
     public void zoomCameraAt(double zoomFactor, double pivotX, double pivotY) {
         camera.zoomAt(zoomFactor, pivotX, pivotY);
     }
+    
+    public Camera getCamera() {
+        return camera;
+    }
 
     /**
      * Resets the camera and redraws the map.
