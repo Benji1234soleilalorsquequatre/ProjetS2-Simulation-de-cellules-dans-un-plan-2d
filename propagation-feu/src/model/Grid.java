@@ -86,14 +86,24 @@ public class Grid {
                 int currentMaxHumidity = maxHumidityTree;
 
                 // 2. ADAPTATION POUR LA BROUSSAILLE : Réduction proportionnelle de la moyenne
-                if (vegetation != Vegetation.TREE) {
+                if (vegetation == Vegetation.BRUSHWOOD) {
                     // La broussaille possède en moyenne 40% du combustible d'un arbre
-                    currentMinFuel = (int) (minFuelTree * 0.4);
-                    currentMaxFuel = (int) (maxFuelTree * 0.4);
+                    if(maxFuelTree*0.80 < minFuelTree){
+                        currentMaxFuel = minFuelTree;
+                    }
+                    else{
+                    currentMaxFuel = (int) (maxFuelTree * 0.80);
+                    }
+                    currentMinFuel = minFuelTree;
 
                     // La broussaille est plus sèche, elle conserve 60% de l'humidité d'un arbre
-                    currentMinHumidity = (int) (minHumidityTree * 0.6);
-                    currentMaxHumidity = (int) (maxHumidityTree * 0.6);
+                    if(maxHumidityTree*0.80 < minHumidityTree){
+                        currentMaxHumidity = minHumidityTree;
+                    }
+                    else{
+                    currentMaxHumidity = (int) (maxHumidityTree * 0.80);
+                    }
+                    currentMinHumidity = minHumidityTree;
                 }
 
                 // 3. CALCUL DE L'ALÉATOIRE (Gère de manière robuste le cas où la plage vaut 0)
