@@ -1,28 +1,42 @@
 package model;
 
 /**
- * Represents a single cell (grid square) in the forest simulation.
- * Each cell has a state (Tree, Fire, Ash, etc.), physical characteristics
- * (humidity, heat, fuel), and a vegetation type.
+ * Represents a single cell in the forest grid.
+ * <p>
+ * Each cell stores its current state, vegetation type, and physical
+ * properties such as humidity, heat, and fuel. These properties are
+ * used by fire propagation algorithms to determine how the fire evolves
+ * throughout the simulation.
+ * </p>
  */
 public class Cell {
 
+    /** Current state of the cell. */
     private State state;
+
+    /** Type of vegetation contained in the cell. */
     private Vegetation vegetation;
 
+    /** Humidity level of the cell. */
     private int humidity;
+
+    /** Heat level of the cell. */
     private int heat;
+
+    /** Amount of fuel available for burning. */
     private int fuel;
+
+    /** Remaining duration of the wet state. */
     private int wetTime = 0;
 
     /**
-     * Creates a new cell with its basic properties.
+     * Creates a new cell with the specified properties.
      *
-     * @param state      The initial cell state (e.g., State.VEGETATION)
-     * @param humidity   The humidity percentage (0-100, inhibits fire spread)
-     * @param heat       The accumulated heat (0-100, accelerates fire)
-     * @param fuel       The amount of wood available to burn (0-100)
-     * @param vegetation The vegetation type (TREE or BRUSHWOOD)
+     * @param state The initial state of the cell.
+     * @param humidity The humidity level.
+     * @param heat The heat level.
+     * @param fuel The amount of available fuel.
+     * @param vegetation The vegetation type.
      */
     public Cell(State state, int humidity, int heat, int fuel, Vegetation vegetation) {
         this.state = state;
@@ -33,9 +47,9 @@ public class Cell {
     }
 
     /**
-     * Creates an exact independent copy of the cell.
+     * Creates a deep copy of this cell.
      *
-     * @return A new Cell instance with the same values
+     * @return A new cell containing the same values.
      */
     public Cell copy() {
         Cell copy = new Cell(state, humidity, heat, fuel, vegetation);
@@ -45,8 +59,23 @@ public class Cell {
 
    
     // ===== VEGETATION =====
+
+    /**
+     * Returns the vegetation type of the cell.
+     *
+     * @return The vegetation type.
+     */
     public Vegetation getVegetation() {
         return this.vegetation;
+    }
+
+    /**
+     * Updates the vegetation type of the cell.
+     *
+     * @param vegetation The new vegetation type.
+     */
+    public void setVegetation(Vegetation vegetation) {
+        this.vegetation = vegetation;
     }
 
     public void setVegetation(Vegetation vegetation) {
@@ -55,8 +84,32 @@ public class Cell {
 
     
     // ===== STATE =====
+
+    /**
+     * Returns the current state of the cell.
+     *
+     * @return The cell state.
+     */
     public State getState() {
         return state;
+    }
+
+    /**
+     * Updates the state of the cell.
+     *
+     * @param state The new state.
+     */
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    /**
+     * Checks whether the cell is currently wet.
+     *
+     * @return true if the cell is in the WET state, false otherwise.
+     */
+    public boolean isWet() {
+        return state == State.WET;
     }
 
     public void setState(State state) {
@@ -69,34 +122,75 @@ public class Cell {
 
    
     // ===== DATA =====
+
+    /**
+     * Returns the humidity level.
+     *
+     * @return The humidity value.
+     */
     public int getHumidity() {
         return humidity;
     }
 
+    /**
+     * Updates the humidity level.
+     *
+     * @param humidity The new humidity value.
+     */
     public void setHumidity(int humidity) {
         this.humidity = humidity;
     }
 
+    /**
+     * Returns the heat level.
+     *
+     * @return The heat value.
+     */
     public int getHeat() {
         return heat;
     }
 
+    /**
+     * Updates the heat level.
+     *
+     * @param heat The new heat value.
+     */
     public void setHeat(int heat) {
         this.heat = heat;
     }
 
+    /**
+     * Returns the amount of remaining fuel.
+     *
+     * @return The fuel quantity.
+     */
     public int getFuel() {
         return fuel;
     }
 
+    /**
+     * Updates the fuel quantity.
+     *
+     * @param fuel The new fuel quantity.
+     */
     public void setFuel(int fuel) {
         this.fuel = fuel;
     }
 
+    /**
+     * Returns the remaining wet duration.
+     *
+     * @return The wet time counter.
+     */
     public int getWetTime() {
         return wetTime;
     }
 
+    /**
+     * Updates the wet duration counter.
+     *
+     * @param wetTime The new wet time value.
+     */
     public void setWetTime(int wetTime) {
         this.wetTime = wetTime;
     }
@@ -104,17 +198,26 @@ public class Cell {
     // ===== FIRE =====
 
     /**
-     * Checks if the cell meets physical conditions to catch fire.
+     * Checks whether the cell can catch fire.
+     * <p>
+     * A cell can burn if it contains vegetation, still has fuel,
+     * and is not fully saturated with water.
+     * </p>
      *
-     * @return true if it has vegetation with fuel and is not completely saturated
+     * @return true if the cell can burn, false otherwise.
      */
     public boolean canBurn() {
-        return state == State.VEGETATION && fuel > 0 && humidity < 100;
+        return state == State.VEGETATION
+                && fuel > 0
+                && humidity < 100;
     }
 
     /**
-     * Ignites the cell if conditions allow, setting it to BURNING state
-     * and maximizing its heat.
+     * Ignites the cell.
+     * <p>
+     * If the cell can burn, its state becomes {@code BURNING}
+     * and its heat is set to the maximum value.
+     * </p>
      */
     public void ignite() {
         if (canBurn()) {
@@ -123,8 +226,18 @@ public class Cell {
         }
     }
 
+    /**
+     * Returns a textual representation of the cell.
+     *
+     * @return A string containing the state, vegetation type,
+     * humidity, heat, and fuel values.
+     */
     @Override
     public String toString() {
-        return state + " V:" + vegetation + " H:" + humidity + " T:" + heat + " F:" + fuel;
+        return state
+                + " V:" + vegetation
+                + " H:" + humidity
+                + " T:" + heat
+                + " F:" + fuel;
     }
 }

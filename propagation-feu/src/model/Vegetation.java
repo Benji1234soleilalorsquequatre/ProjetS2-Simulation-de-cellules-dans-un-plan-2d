@@ -1,13 +1,18 @@
 package model;
 
 /**
- * Enumeration representing the types of vegetation in the forest.
- * Different vegetation types have different physical properties:
- * <ul>
- *   <li>TREE: Large trees with higher fuel and humidity content (50-100 fuel, 10-30% humidity)</li>
- *   <li>BRUSHWOOD: Dry brushwood with lower fuel and humidity content (10-20 fuel, 0-10% humidity)</li>
- * </ul>
+ * Represents the different types of vegetation that can occupy a cell.
+ * <p>
+ * Different vegetation types may influence the behavior of the simulation,
+ * such as the probability of catching fire or the speed of fire propagation.
+ * </p>
  */
 public enum Vegetation {
-    TREE, BRUSHWOOD;
+
+    /** A tree with standard fire propagation properties. */
+    TREE,
+
+    /** Dense brushwood that is more likely to catch fire. */
+    BRUSHWOOD
+
 }

@@ -163,7 +163,7 @@ public class DisplayManager {
     }
 
     /**
-     * Checks whether a cell rectangle is outside the visible canvas.
+     * Checks whether a cell rectangle is outside the visible canvas.P
      *
      * @param x The X coordinate of the cell on the canvas.
      * @param y The Y coordinate of the cell on the canvas.

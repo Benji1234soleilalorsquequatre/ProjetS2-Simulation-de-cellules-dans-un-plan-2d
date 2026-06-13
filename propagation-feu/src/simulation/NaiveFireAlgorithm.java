@@ -5,21 +5,24 @@ import model.Grid;
 import model.State;
 
 /**
- * Simple fire propagation algorithm using only the 4-neighborhood (no diagonals).
- * Fire spreads to adjacent cells with a constant probability, regardless of
- * environmental factors like wind or heat.
+ * Simple fire propagation algorithm.
+ * <p>
+ * This algorithm uses a basic propagation model where fire spreads
+ * only to the four orthogonal neighboring cells (Von Neumann neighborhood).
+ * Each neighboring vegetation cell has a fixed probability of catching fire.
+ * Burning cells are immediately converted to ash after spreading the fire.
+ * </p>
  */
 public class NaiveFireAlgorithm implements FirePropagationAlgorithm {
 
     /**
-     * Applies the naive fire propagation to the specified cell.
-     * If the cell is burning, it spreads fire to its 4 neighbors.
+     * Applies the fire propagation algorithm to a specific cell.
      *
-     * @param currentGrid The current grid state
-     * @param nextGrid    The next grid state to modify
-     * @param row         The row of the cell to process
-     * @param col         The column of the cell to process
-     * @param config      The simulation configuration
+     * @param currentGrid The current grid state (read-only).
+     * @param nextGrid The next grid state where updates are applied.
+     * @param row The row index of the cell to process.
+     * @param col The column index of the cell to process.
+     * @param config The simulation configuration.
      */
     @Override
     public void apply(Grid currentGrid, Grid nextGrid, int row, int col, SimulationConfig config) {
@@ -34,17 +37,25 @@ public class NaiveFireAlgorithm implements FirePropagationAlgorithm {
     }
 
     /**
-     * Spreads fire to the 4 adjacent cells (North, South, East, West).
-     * Each neighbor has a chance to ignite based on the base spread probability.
+     * Attempts to spread fire to the four orthogonal neighboring cells.
+     * <p>
+     * Each neighboring vegetation cell has a fixed probability
+     * of catching fire.
+     * </p>
      *
-     * @param currentGrid The current grid state
-     * @param nextGrid    The next grid state
-     * @param row         The row of the burning cell
-     * @param col         The column of the burning cell
-     * @param config      The simulation configuration
+     * @param currentGrid The current grid.
+     * @param nextGrid The next grid.
+     * @param row The row index of the burning cell.
+     * @param col The column index of the burning cell.
+     * @param config The simulation configuration.
      */
-    private void spreadToNeighbors(Grid currentGrid, Grid nextGrid, int row, int col, SimulationConfig config) {
-        // 4-neighborhood: Up, Down, Left, Right
+    private void spreadToNeighbors(
+            Grid currentGrid,
+            Grid nextGrid,
+            int row,
+            int col,
+            SimulationConfig config) {
+
         int[][] directions = {
             {-1, 0},
             {1, 0},
@@ -73,9 +84,13 @@ public class NaiveFireAlgorithm implements FirePropagationAlgorithm {
     }
 
     /**
-     * Converts a burning cell to ash.
+     * Updates a burning cell after fire propagation.
+     * <p>
+     * In this simplified model, a burning cell immediately becomes ash
+     * after spreading fire to its neighbors.
+     * </p>
      *
-     * @param cell The cell to burn
+     * @param cell The burning cell to update.
      */
     private void burnCurrentCell(Cell cell) {
         cell.setState(State.ASH);

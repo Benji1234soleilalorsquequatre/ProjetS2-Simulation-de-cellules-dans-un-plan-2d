@@ -37,52 +37,40 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
      * @param config      The simulation configuration
      */
     @Override
-    public void apply(
-            Grid currentGrid,
-            Grid nextGrid,
-            int row,
-            int col,
-            SimulationConfig config) {
+    public void apply(Grid currentGrid, Grid nextGrid, int row, int col, SimulationConfig config) {
 
         Cell current = currentGrid.getCell(row, col);
 
-        // RULE 1: If cell was alert (PREVENTIVE), it catches fire (BURNING) next turn
+        // Rule 1: Preventive cells become burning cells at the next step.
         if (current.getState() == State.PREVENTIVE) {
             nextGrid.getCell(row, col).setState(State.BURNING);
             nextGrid.getCell(row, col).setHeat(100);
             return;
         }
 
-        // If the cell is not burning, stop processing
+        // Stop processing if the cell is not burning.
         if (current.getState() != State.BURNING) {
             return;
         }
 
-        // RULE 2: If cell is burning (BURNING), calculate fire spread to neighbors
+        // Rule 2: Burning cells attempt to spread fire to their neighbors.
         spreadFire(currentGrid, nextGrid, row, col, current, config);
 
-        // And consume fuel of the burning cell
+        // Burning cells consume their own fuel.
         updateBurningCell(nextGrid.getCell(row, col), config);
     }
 
     /**
-     * Attempts to spread fire from the source cell to all valid neighbor cells.
-     * Each neighbor's state is changed to PREVENTIVE if the spread probability succeeds.
+     * Attempts to spread fire from a source cell to all valid neighboring cells.
      *
-     * @param currentGrid The current grid state
-     * @param nextGrid    The next grid state
-     * @param row         The row index of the source cell
-     * @param col         The column index of the source cell
-     * @param source      The Cell object representing the fire source
-     * @param config      The simulation configuration
+     * @param currentGrid The current grid.
+     * @param nextGrid The next grid.
+     * @param row The row index of the source cell.
+     * @param col The column index of the source cell.
+     * @param source The source burning cell.
+     * @param config The simulation configuration.
      */
-    private void spreadFire(
-            Grid currentGrid,
-            Grid nextGrid,
-            int row,
-            int col,
-            Cell source,
-            SimulationConfig config) {
+    private void spreadFire(Grid currentGrid, Grid nextGrid, int row, int col, Cell source, SimulationConfig config) {
 
         for (int[] dir : DIRECTIONS) {
 
@@ -108,14 +96,19 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
     }
 
     /**
-     * Computes the mathematical probability that fire spreads to a target cell.
-     * Considers humidity, heat, wind alignment, and vegetation type.
+     * Computes the probability that fire spreads from a burning cell
+     * to a target cell.
+     * <p>
+     * The probability depends on several factors:
+     * humidity, heat, wind direction and speed, fuel quantity,
+     * and vegetation type.
+     * </p>
      *
-     * @param source    The burning source cell
-     * @param target    The target cell at risk
-     * @param direction The direction vector [dy, dx] from source to target
-     * @param config    The configuration with impact weights
-     * @return The final probability between 0.0 and 1.0
+     * @param source The burning source cell.
+     * @param target The target cell.
+     * @param direction The propagation direction vector [row, column].
+     * @param config The simulation parameters.
+     * @return A probability value between 0.0 and 1.0.
      */
     private double computeSpreadProbability(
             Cell source,
@@ -141,9 +134,9 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
         double fuelFactor = 0.5 + target.getFuel() / 200.0;
         probability *= fuelFactor;
 
-        // Vegetation effect
-        if(target.getVegetation() == Vegetation.BRUSHWOOD){
-            probability += 0.35; // Brushwood has higher fire spread probability
+        // Vegetation influence.
+        if (target.getVegetation() == Vegetation.BRUSHWOOD) {
+            probability += 0.35;
         } else {
             probability -= 0.05;
         }
@@ -152,11 +145,15 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
     }
 
     /**
-     * Updates the state of a burning cell by consuming fuel.
-     * If fuel reaches zero, the cell becomes ash (ASH).
+     * Updates a burning cell by consuming its fuel.
+     * <p>
+     * When the fuel reaches zero, the cell becomes ash ({@code ASH}).
+     * Otherwise, its heat is adjusted according to the remaining fuel.
+     * </p>
      *
-     * @param cell   The burning cell to update
-     * @param config The configuration specifying fuel consumption rate
+     * @param cell The burning cell to update.
+     * @param config The simulation configuration containing the fuel
+     * consumption rate.
      */
     private void updateBurningCell(Cell cell, SimulationConfig config) {
         int remainingFuel = (int) (cell.getFuel() - config.getFuelConsumption());

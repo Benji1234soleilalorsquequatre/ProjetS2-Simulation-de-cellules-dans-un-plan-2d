@@ -6,15 +6,20 @@ import model.State;
 import model.Wind;
 
 /**
- * Advanced fire propagation algorithm considering all physical factors.
- * Uses 8-neighborhood (Moore neighborhood including diagonals) and calculates
- * spread probability based on wind, humidity, heat, fuel, and vegetation type.
+ * Advanced fire propagation algorithm.
+ * <p>
+ * This algorithm models fire propagation using several environmental
+ * factors such as humidity, heat, wind, fuel quantity, and water drops.
+ * Fire can spread to any of the eight neighboring cells (Moore neighborhood),
+ * with a probability computed from the physical parameters defined in the
+ * simulation configuration.
+ * </p>
  */
 public class AdvancedFireAlgorithm
         implements FirePropagationAlgorithm {
 
     /**
-     * 8 possible directions for fire propagation (Moore neighborhood).
+     * The eight possible propagation directions (Moore neighborhood).
      */
     private static final int[][] DIRECTIONS = {
             {-1, -1}, {-1, 0}, {-1, 1},
@@ -46,19 +51,9 @@ public class AdvancedFireAlgorithm
             return;
         }
 
-        spreadFire(
-                currentGrid,
-                nextGrid,
-                row,
-                col,
-                current,
-                config
-        );
+        spreadFire(currentGrid, nextGrid, row, col, current, config);
 
-        updateBurningCell(
-                nextGrid.getCell(row, col),
-                config
-        );
+        updateBurningCell(nextGrid.getCell(row, col), config);
     }
 
     /**
@@ -72,59 +67,47 @@ public class AdvancedFireAlgorithm
      * @param source      The burning cell
      * @param config      The simulation configuration
      */
-    private void spreadFire(
-            Grid currentGrid,
-            Grid nextGrid,
-            int row,
-            int col,
-            Cell source,
-            SimulationConfig config) {
+    private void spreadFire(Grid currentGrid, Grid nextGrid, int row, int col, Cell source, SimulationConfig config) {
 
         for (int[] dir : DIRECTIONS) {
 
             int neighborRow = row + dir[0];
             int neighborCol = col + dir[1];
 
-            if (!currentGrid.isInside(
-                    neighborRow,
-                    neighborCol)) {
+            if (!currentGrid.isInside(neighborRow, neighborCol)) {
                 continue;
             }
 
-            Cell target = currentGrid.getCell(
-                            neighborRow,
-                            neighborCol);
+            Cell target =
+                    currentGrid.getCell(neighborRow, neighborCol);
 
             if (!target.canBurn()) {
                 continue;
             }
 
-            double probability = computeSpreadProbability(
-                    source,
-                    target,
-                    dir,
-                    config);
+            double probability =
+                    computeSpreadProbability(source, target, dir, config);
 
             if (Math.random() < probability) {
 
-                nextGrid.getCell(
-                        neighborRow,
-                        neighborCol)
-                        .ignite();
+                nextGrid.getCell(neighborRow, neighborCol).ignite();
             }
         }
     }
 
     /**
-     * Computes the probability that fire spreads to a target cell.
-     * Factors include: humidity (reduces), heat (increases), wind alignment,
-     * fuel content, and Canadair water effect.
+     * Computes the probability that fire spreads from a burning cell
+     * to a target cell.
+     * <p>
+     * The probability depends on humidity, heat, wind conditions,
+     * available fuel, and the presence of water.
+     * </p>
      *
-     * @param source    The burning source cell
-     * @param target    The target cell at risk
-     * @param direction The direction vector [dy, dx] from source to target
-     * @param config    The simulation configuration with weights
-     * @return A probability value between 0.0 and 1.0
+     * @param source The burning source cell.
+     * @param target The target cell.
+     * @param direction The propagation direction vector [row, column].
+     * @param config The simulation parameters.
+     * @return A probability value between 0.0 and 1.0.
      */
     private double computeSpreadProbability(
         Cell source,
@@ -134,13 +117,13 @@ public class AdvancedFireAlgorithm
 
         double probability = config.getBaseSpreadProbability();
 
-        // Humidity effect (higher humidity reduces spread probability)
+        // Humidity influence
         probability -= target.getHumidity() * config.getHumidityImpact();
 
-        // Source heat effect (higher heat increases spread probability)
+        // Heat influence
         probability += source.getHeat() * config.getHeatImpact();
 
-        // Wind alignment effect
+        // Wind influence
         Wind wind = config.getWind();
 
         int dx = direction[1];
@@ -148,37 +131,40 @@ public class AdvancedFireAlgorithm
 
         double alignment = dx * wind.getWindX() - dy * wind.getWindY();
 
-        // Clamp alignment to [-1, 1]
         alignment = Math.max(-1.0, Math.min(1.0, alignment));
 
         double windBonus = alignment * wind.getWindSpeed() * config.getWindImpact() * 0.1;
+
         probability += windBonus;
 
-        // Fuel factor (more fuel increases spread probability)
+        // Fuel influence
         double fuelFactor = 0.5 + target.getFuel() / 200.0;
+
         probability *= fuelFactor;
 
-        // Canadair water effect (greatly reduces probability if wet)
-        if(target.getState() == State.WET){
+        // Water drop influence
+        if (target.getState() == State.WET) {
             probability *= 0.05;
         }
 
-        // Final clamping to [0.0, 1.0]
+        // Final clamping
         probability = Math.max(0.0, Math.min(1.0, probability));
 
         return probability;
     }
 
     /**
-     * Updates the state of a burning cell by consuming fuel.
-     * When fuel is depleted, the cell turns to ash.
+     * Updates a burning cell by consuming its fuel.
+     * <p>
+     * When the fuel reaches zero, the cell becomes ash ({@code ASH}).
+     * Otherwise, its heat is adjusted according to the remaining fuel.
+     * </p>
      *
-     * @param cell   The burning cell to update
-     * @param config The simulation configuration
+     * @param cell The burning cell to update.
+     * @param config The simulation configuration containing the fuel
+     * consumption rate.
      */
-    private void updateBurningCell(
-        Cell cell,
-        SimulationConfig config) {
+    private void updateBurningCell(Cell cell, SimulationConfig config) {
 
         int remainingFuel = (int) (cell.getFuel() - config.getFuelConsumption());
         cell.setFuel(Math.max(0, remainingFuel));
@@ -187,7 +173,10 @@ public class AdvancedFireAlgorithm
             cell.setState(State.ASH);
             cell.setHeat(20);
         } else {
-            cell.setHeat(Math.max(20, Math.min(100, cell.getFuel())));
+
+            cell.setHeat(
+                Math.max(20, Math.min(100, cell.getFuel()))
+            );
         }
     }
 }

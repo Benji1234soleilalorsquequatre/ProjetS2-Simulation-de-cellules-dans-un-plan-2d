@@ -5,15 +5,27 @@ import model.Cell;
 import model.State;
 
 /**
- * Main simulation engine orchestrating the temporal loop and fire propagation.
- * Applies fire propagation algorithms and manages global grid states
- * (such as water evaporation from the Canadair water bomber).
+ * Main simulation engine.
+ * <p>
+ * This class manages the temporal evolution of the forest by applying
+ * a fire propagation algorithm at each simulation step.
+ * It stores the current state of the grid, updates wet cells,
+ * and applies the physical parameters defined in the simulation
+ * configuration.
+ * </p>
  */
 public class SimulationEngine {
 
+    /** Grid representing the current state of the simulation. */
     private Grid currentGrid;
+
+    /** Algorithm used to compute fire propagation. */
     private FirePropagationAlgorithm algorithm;
+
+    /** Physical parameters of the simulation (wind, probabilities, etc.). */
     private SimulationConfig config;
+
+    /** Number of simulation steps executed since the start. */
     private int stepCounter;
 
     /**
@@ -31,9 +43,13 @@ public class SimulationEngine {
     }
 
     /**
-     * Executes one complete simulation step (one time unit).
-     * Duplicates the grid, manages water evaporation, applies fire to each cell,
-     * then replaces the old grid with the new one.
+     * Executes a complete simulation step.
+     * <p>
+     * A copy of the current grid is created in order to compute the
+     * next state without modifying the current one during processing.
+     * Wet cells are updated first, then the propagation algorithm is
+     * applied to every cell of the grid.
+     * </p>
      */
     public void step() {
         Grid nextGrid = currentGrid.copy();
@@ -51,11 +67,14 @@ public class SimulationEngine {
     }
 
     /**
-     * Manages water evaporation from Canadair drops.
-     * Decreases humidity of wet cells each turn until they return to normal
-     * vegetation state.
+     * Updates wet cells in the grid.
+     * <p>
+     * At each simulation step, the humidity of watered cells
+     * gradually decreases. When a cell becomes dry enough,
+     * it returns to its normal vegetation state.
+     * </p>
      *
-     * @param grid The grid to apply evaporation to
+     * @param grid The grid to update.
      */
     private void updateWetCells(Grid grid) {
         for (int row = 0; row < grid.getHeight(); row++) {
@@ -75,18 +94,19 @@ public class SimulationEngine {
     }
 
     /**
-     * Returns the current grid state.
+     * Returns the current simulation grid.
      *
-     * @return The current grid
+     * @return The current grid state.
      */
     public Grid getCurrentGrid() {
         return currentGrid;
     }
 
     /**
-     * Returns the number of steps since simulation start.
+     * Returns the number of simulation steps executed since the start
+     * of the simulation.
      *
-     * @return The step counter value
+     * @return The simulation step counter.
      */
     public int getStepCounter() {
         return stepCounter;

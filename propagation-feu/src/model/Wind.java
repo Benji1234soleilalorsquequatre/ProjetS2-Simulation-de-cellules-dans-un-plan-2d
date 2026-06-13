@@ -1,20 +1,30 @@
 package model;
 
 /**
- * Represents the wind conditions affecting fire propagation.
- * Wind has both magnitude (speed) and direction (x, y components).
+ * Represents the wind conditions used in the simulation.
+ * <p>
+ * A wind is defined by its speed and its direction components
+ * on the horizontal and vertical axes. These values are used
+ * by fire propagation algorithms to influence the spread of fire.
+ * </p>
  */
 public class Wind {
+
+    /** Wind speed intensity. */
     private int windSpeed;
+
+    /** Horizontal component of the wind direction. */
     private int windX;
+
+    /** Vertical component of the wind direction. */
     private int windY;
 
     /**
-     * Constructs a wind object with specified speed and direction.
+     * Creates a new wind configuration.
      *
-     * @param windSpeed The magnitude of the wind (typically 0-20)
-     * @param windX     The X component of wind direction (typically -1 to 1)
-     * @param windY     The Y component of wind direction (typically -1 to 1)
+     * @param windSpeed The wind speed.
+     * @param windX The horizontal direction component.
+     * @param windY The vertical direction component.
      */
     public Wind(int windSpeed, int windX, int windY) {
         this.windSpeed = windSpeed;
@@ -23,27 +33,27 @@ public class Wind {
     }
 
     /**
-     * Returns the wind speed magnitude.
+     * Returns the wind speed.
      *
-     * @return The wind speed value
+     * @return The wind speed.
      */
     public int getWindSpeed() {
         return this.windSpeed;
     }
 
     /**
-     * Returns the X component of wind direction.
+     * Returns the horizontal component of the wind direction.
      *
-     * @return The X direction value
+     * @return The horizontal direction component.
      */
     public int getWindX() {
         return this.windX;
     }
 
     /**
-     * Returns the Y component of wind direction.
+     * Returns the vertical component of the wind direction.
      *
-     * @return The Y direction value
+     * @return The vertical direction component.
      */
     public int getWindY() {
         return this.windY;

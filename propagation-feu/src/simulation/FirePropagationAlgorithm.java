@@ -3,20 +3,24 @@ package simulation;
 import model.Grid;
 
 /**
- * Interface for fire propagation algorithms.
- * Implementations define how fire spreads from one cell to its neighbors
- * based on physical parameters (wind, humidity, heat, fuel).
+ * Defines a fire propagation algorithm.
+ * <p>
+ * Implementations of this interface determine how fire evolves
+ * from one simulation step to the next. The simulation engine
+ * delegates the processing of each cell to an implementation
+ * of this interface.
+ * </p>
  */
 public interface FirePropagationAlgorithm {
 
     /**
-     * Applies the fire propagation algorithm to a specific cell.
+     * Applies the fire propagation logic to a specific cell.
      *
-     * @param currentGrid The grid in its current state (read-only for source)
-     * @param nextGrid    The grid for the next time step (where changes are applied)
-     * @param row         The row index of the cell to process
-     * @param col         The column index of the cell to process
-     * @param config      The simulation configuration parameters
+     * @param currentGrid The current grid state (read-only).
+     * @param nextGrid The next grid state where updates are applied.
+     * @param row The row index of the cell to process.
+     * @param col The column index of the cell to process.
+     * @param config The simulation configuration and physical parameters.
      */
     void apply(
         Grid currentGrid,

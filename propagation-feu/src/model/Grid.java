@@ -1,22 +1,35 @@
 package model;
 
 /**
- * Represents the 2D matrix of the forest.
- * Contains all cells and manages random generation of vegetation
- * (Trees and Brushwood) during initialization.
+ * Represents the 2D forest grid used by the simulation.
+ * <p>
+ * This class stores all cells of the forest and is responsible for
+ * generating vegetation during initialization. Each cell is assigned
+ * a vegetation type, humidity level, fuel quantity, and heat value.
+ * </p>
+ * <p>
+ * The grid also provides utility methods for accessing, modifying,
+ * copying, and displaying cells, as well as checking whether active
+ * fires are still present.
+ * </p>
  */
 public class Grid {
 
+    /** Two-dimensional array containing all forest cells. */
     private Cell[][] forest;
+
+    /** Number of rows in the grid. */
     private int height;
+
+    /** Number of columns in the grid. */
     private int width;
 
     /**
-     * Default constructor. Generates a forest with humidity and fuel values
-     * randomly generated according to vegetation type.
+     * Creates a forest grid with randomly generated vegetation,
+     * humidity, and fuel values.
      *
-     * @param height The number of rows in the grid
-     * @param width  The number of columns in the grid
+     * @param height The number of rows in the grid.
+     * @param width The number of columns in the grid.
      */
     public Grid(int height, int width) {
         this.height = height;
@@ -26,47 +39,46 @@ public class Grid {
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 Vegetation vegetation = (Math.random() < 0.3) ? Vegetation.BRUSHWOOD : Vegetation.TREE;
+
                 int randomHumidity;
                 int randomFuel;
 
                 if (vegetation == Vegetation.TREE) {
-                    randomFuel = 50 + (int)(Math.random() * 51);
-                    randomHumidity = 10 + (int)(Math.random() * 21);
+                    randomFuel = 50 + (int) (Math.random() * 51);
+                    randomHumidity = 10 + (int) (Math.random() * 21);
                 } else {
-                    randomFuel = 10 + (int)(Math.random() * 11);
-                    randomHumidity = 0 + (int)(Math.random() * 10);
+                    randomFuel = 10 + (int) (Math.random() * 11);
+                    randomHumidity = (int) (Math.random() * 10);
                 }
 
-                this.forest[row][col] = new Cell(
-                    State.VEGETATION, randomHumidity, 20, randomFuel, vegetation
-                );
+                this.forest[row][col] = new Cell(State.VEGETATION, randomHumidity, 20, randomFuel, vegetation);
             }
         }
     }
 
     /**
-     * Custom constructor allowing to force minimum and maximum statistics for large trees.
-     * Brushwood statistics are reduced proportionally on average.
-     * Used to restart the simulation through the GUI.
+     * Creates a forest grid using custom vegetation parameters.
+     * <p>
+     * Tree humidity and fuel values are generated within the specified
+     * ranges. Brushwood cells receive proportionally reduced values.
+     * </p>
      *
-     * @param height            The number of rows
-     * @param width             The number of columns
-     * @param minHumidityTree   Minimum humidity percentage for trees (0-100)
-     * @param minFuelTree       Minimum fuel amount for trees (0-100)
-     * @param maxHumidityTree   Maximum humidity percentage for trees (0-100)
-     * @param maxFuelTree       Maximum fuel amount for trees (0-100)
-     * @param heat              The heat parameter
+     * @param height The number of rows.
+     * @param width The number of columns.
+     * @param minHumidityTree The minimum tree humidity.
+     * @param minFuelTree The minimum tree fuel quantity.
+     * @param maxHumidityTree The maximum tree humidity.
+     * @param maxFuelTree The maximum tree fuel quantity.
+     * @param heat The initial heat value assigned to cells.
      */
     public Grid(int height, int width, int minHumidityTree, int minFuelTree, int maxHumidityTree, int maxFuelTree, int heat) {
-        
-        // 1. VALIDATION: Stops the program if the data received from the GUI is illogical
+
         if (minFuelTree > maxFuelTree) {
-            throw new IllegalArgumentException("Configuration error: minFuelTree ("
-                + minFuelTree + ") cannot exceed maxFuelTree (" + maxFuelTree + ").");
+            throw new IllegalArgumentException("Configuration error: minFuelTree (" + minFuelTree + ") cannot be greater than maxFuelTree (" + maxFuelTree + ").");
         }
+
         if (minHumidityTree > maxHumidityTree) {
-            throw new IllegalArgumentException("Configuration error: minHumidityTree ("
-                + minHumidityTree + ") cannot exceed maxHumidityTree (" + maxHumidityTree + ").");
+            throw new IllegalArgumentException("Configuration error: minHumidityTree (" + minHumidityTree + ") cannot be greater than maxHumidityTree (" + maxHumidityTree + ").");
         }
 
         this.height = height;
@@ -75,7 +87,9 @@ public class Grid {
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
+
                 Vegetation vegetation = (Math.random() < 0.3) ? Vegetation.BRUSHWOOD : Vegetation.TREE;
+
                 int randomHumidity;
                 int randomFuel;
 
@@ -84,16 +98,17 @@ public class Grid {
                 int currentMinHumidity = minHumidityTree;
                 int currentMaxHumidity = maxHumidityTree;
 
-                // 2. BRUSHWOOD ADAPTATION: Proportional reduction of averages
                 if (vegetation == Vegetation.BRUSHWOOD) {
-                    if(maxFuelTree*0.80 < minFuelTree){
+
+                    if (maxFuelTree * 0.80 < minFuelTree) {
                         currentMaxFuel = minFuelTree;
                     } else {
                         currentMaxFuel = (int) (maxFuelTree * 0.80);
                     }
+
                     currentMinFuel = minFuelTree;
 
-                    if(maxHumidityTree*0.80 < minHumidityTree){
+                    if (maxHumidityTree * 0.80 < minHumidityTree) {
                         currentMaxHumidity = minHumidityTree;
                     } else {
                         currentMaxHumidity = (int) (maxHumidityTree * 0.80);
@@ -102,18 +117,16 @@ public class Grid {
                 }
 
                 int fuelRange = currentMaxFuel - currentMinFuel;
-                randomFuel = currentMinFuel + (fuelRange > 0 ? (int)(Math.random() * fuelRange) : 0);
+                randomFuel = currentMinFuel + (fuelRange > 0 ? (int) (Math.random() * fuelRange) : 0);
 
                 int humidityRange = currentMaxHumidity - currentMinHumidity;
-                randomHumidity = currentMinHumidity + (humidityRange > 0 ? (int)(Math.random() * humidityRange) : 0);
 
-                // 4. SAFETY CLAMPING (Guarantees strict values between 0% and 100%)
+                randomHumidity = currentMinHumidity + (humidityRange > 0 ? (int) (Math.random() * humidityRange) : 0);
+
                 randomFuel = Math.max(0, Math.min(100, randomFuel));
                 randomHumidity = Math.max(0, Math.min(100, randomHumidity));
 
-                this.forest[row][col] = new Cell(
-                    State.VEGETATION, randomHumidity, heat, randomFuel, vegetation
-                );
+                this.forest[row][col] = new Cell(State.VEGETATION, randomHumidity, heat, randomFuel, vegetation);
             }
         }
     }
@@ -134,18 +147,30 @@ public class Grid {
         return false;
     }
 
-    /** @return The height of the grid. */
-    public int getHeight() { return height; }
-
-    /** @return The width of the grid */
-    public int getWidth() { return width; }
+    /**
+     * Returns the grid height.
+     *
+     * @return The number of rows.
+     */
+    public int getHeight() {
+        return height;
+    }
 
     /**
-     * Gets a cell at a specific position.
+     * Returns the grid width.
      *
-     * @param row The row index
-     * @param col The column index
-     * @return The cell at the specified position, or null if out of bounds
+     * @return The number of columns.
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Returns the cell located at the specified position.
+     *
+     * @param row The row index.
+     * @param col The column index.
+     * @return The requested cell, or null if the coordinates are invalid.
      */
     public Cell getCell(int row, int col) {
         if (isInside(row, col)) {
@@ -155,11 +180,11 @@ public class Grid {
     }
 
     /**
-     * Manually replaces an entire cell in the grid.
+     * Replaces a cell at the specified position.
      *
-     * @param row  The row index
-     * @param col  The column index
-     * @param cell The new cell to place
+     * @param row The row index.
+     * @param col The column index.
+     * @param cell The new cell.
      */
     public void setCell(int row, int col, Cell cell) {
         if (isInside(row, col)) {
@@ -168,11 +193,11 @@ public class Grid {
     }
 
     /**
-     * Changes only the state of an existing cell.
+     * Changes the state of an existing cell.
      *
-     * @param row   The row index
-     * @param col   The column index
-     * @param state The new state
+     * @param row The row index.
+     * @param col The column index.
+     * @param state The new cell state.
      */
     public void setCellState(int row, int col, State state) {
         if (isInside(row, col)) {
@@ -181,35 +206,40 @@ public class Grid {
     }
 
     /**
-     * Checks if coordinates are within the grid bounds.
+     * Checks whether the specified coordinates are inside the grid bounds.
      *
-     * @param row The row index
-     * @param col The column index
-     * @return true if coordinates are inside, false otherwise
+     * @param row The row index.
+     * @param col The column index.
+     * @return true if the coordinates are valid, false otherwise.
      */
     public boolean isInside(int row, int col) {
-        return row >= 0 && row < height && col >= 0 && col < width;
+        return row >= 0 && row < height
+                && col >= 0 && col < width;
     }
 
     /**
-     * Creates a perfect independent clone of the current grid.
+     * Creates a deep copy of the grid.
      *
-     * @return A new Grid with copied cells
+     * @return An independent copy of the current grid.
      */
     public Grid copy() {
         Grid copiedGrid = new Grid(height, width);
+
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                copiedGrid.setCell(row, col, forest[row][col].copy());
+                copiedGrid.setCell(
+                        row,
+                        col,
+                        forest[row][col].copy()
+                );
             }
         }
+
         return copiedGrid;
     }
 
-    // ===== DISPLAY =====
-
     /**
-     * Displays the grid on the console using ASCII characters.
+     * Displays the grid in the console using text symbols.
      */
     public void displayGrid() {
         for (int row = 0; row < height; row++) {
@@ -222,20 +252,21 @@ public class Grid {
     }
 
     /**
-     * Gets the ASCII symbol representing a cell state.
+     * Returns the character used to represent a given cell state.
      *
-     * @param state The cell state
-     * @return A single character representing the state
+     * @param state The cell state.
+     * @return The display symbol associated with the state.
      */
     private String getSymbolForState(State state) {
         switch (state) {
-            case EMPTY: return ".";
-            case VEGETATION: return "T";
-            case BURNING: return "F";
-            case ASH: return "A";
-            case WATER: return "W";
-            case FIREBREAK: return "#";
-            default: return "?";
+            case VEGETATION:
+                return "T";
+            case BURNING:
+                return "F";
+            case ASH:
+                return "A";
+            default:
+                return "?";
         }
     }
 }
