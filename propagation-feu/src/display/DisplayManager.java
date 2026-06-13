@@ -127,25 +127,6 @@ public class DisplayManager {
     }
 
     /**
-     * Checks whether there is at least one burning cell in the grid.
-     *
-     * @return true if at least one cell is burning, false otherwise.
-     */
-    public boolean containsFire() {
-        Grid grid = engine.getCurrentGrid();
-
-        for (int row = 0; row < grid.getHeight(); row++) {
-            for (int col = 0; col < grid.getWidth(); col++) {
-                if (grid.getCell(row, col).getState() == State.BURNING) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Simulates a water drop on a circular area of the grid.
      *
      * @param centerRow The row of the water drop center.
