@@ -25,6 +25,8 @@ public class Controller {
     @FXML private Canvas canvas; 
     @FXML private TextField inputMinHumidity;
     @FXML private TextField inputMinFuel;
+    @FXML private TextField inputMaxHumidity;
+    @FXML private TextField inputMaxFuel;
     @FXML private Button canadairButton;
     @FXML private Button startButton;
     @FXML private Label stateLabel;
@@ -138,8 +140,11 @@ public class Controller {
         try {
             int minHum = Integer.parseInt(inputMinHumidity.getText());
             int minFuel = Integer.parseInt(inputMinFuel.getText());
+            int maxHum = Integer.parseInt(inputMaxHumidity.getText());
+            int maxFuel = Integer.parseInt(inputMaxFuel.getText());
 
-            forest = new Grid(70, 70, minHum, minFuel);
+
+            forest = new Grid(70, 70, minHum, minFuel, maxHum, maxFuel);
             forest.setCellState(24, 24, State.BURNING);
 
             engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());

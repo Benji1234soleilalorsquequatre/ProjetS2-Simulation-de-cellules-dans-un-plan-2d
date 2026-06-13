@@ -64,7 +64,7 @@ public class DisplayManager {
                 State state = currentGrid.getCell(row, col).getState();
                 
                 switch (state) {
-                    case TREE:
+                    case VEGETATION:
                         if (currentGrid.getCell(row, col).getVegetation() == Vegetation.BRUSHWOOD) {
                             gc.setFill(Color.YELLOWGREEN); // Broussailles
                         } else {

@@ -2,7 +2,7 @@ package model;
 
 public enum State {
     EMPTY,
-    TREE,
+    VEGETATION,
     BURNING,
     ASH,
     WATER,

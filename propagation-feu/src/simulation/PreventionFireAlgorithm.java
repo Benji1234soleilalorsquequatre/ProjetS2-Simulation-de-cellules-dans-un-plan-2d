@@ -90,7 +90,7 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
 
             Cell target = currentGrid.getCell(neighborRow, neighborCol);
 
-            if (target.getState() != State.TREE || !target.canBurn()) {
+            if (target.getState() != State.VEGETATION || !target.canBurn()) {
                 continue;
             }
 
@@ -140,7 +140,7 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
         if(target.getVegetation() == Vegetation.BRUSHWOOD){
             probability += 0.35; // Les broussailles ont plus de chances de prendre feu
         } else {
-            probability -= 0.10;
+            probability -= 0.05;
         }
 
         return Math.max(0.0, Math.min(1.0, probability));

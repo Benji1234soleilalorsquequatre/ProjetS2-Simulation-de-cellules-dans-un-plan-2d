@@ -65,7 +65,7 @@ public class SimulationEngine {
                     cell.setHumidity(Math.max(20, cell.getHumidity() - 4));
 
                     if (cell.getHumidity() <= 40) {
-                        cell.setState(State.TREE);
+                        cell.setState(State.VEGETATION);
                     }
                 }
             }

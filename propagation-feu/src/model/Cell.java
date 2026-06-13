@@ -71,7 +71,7 @@ public class Cell {
      * @return true si c'est un arbre vivant, avec du bois et pas totalement trempé.
      */
     public boolean canBurn() {
-        return state == State.TREE && fuel > 0 && humidity < 100;
+        return state == State.VEGETATION && fuel > 0 && humidity < 100;
     }
 
     /**

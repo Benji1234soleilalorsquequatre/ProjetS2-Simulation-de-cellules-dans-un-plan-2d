@@ -50,7 +50,7 @@ public class NaiveFireAlgorithm implements FirePropagationAlgorithm {
 
             Cell neighbor = currentGrid.getCell(neighborRow, neighborCol);
 
-            if (neighbor.getState() == State.TREE) {
+            if (neighbor.getState() == State.VEGETATION) {
                 double probability = config.getBaseSpreadProbability();
 
                 if (Math.random() < probability) {
