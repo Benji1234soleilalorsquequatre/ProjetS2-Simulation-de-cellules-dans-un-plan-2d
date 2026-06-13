@@ -39,7 +39,7 @@ public class Grid {
                 }
 
                 this.forest[row][col] = new Cell(
-                    State.VEGETATION, randomHumidity, 0, randomFuel, vegetation
+                    State.VEGETATION, randomHumidity, 20, randomFuel, vegetation
                 );
             }
         }
@@ -57,9 +57,9 @@ public class Grid {
      * @param maxHumidityTree   Maximum humidity percentage for trees (0-100)
      * @param maxFuelTree       Maximum fuel amount for trees (0-100)
      */
-    public Grid(int height, int width, int minHumidityTree, int minFuelTree, int maxHumidityTree, int maxFuelTree) {
-
-        // 1. VALIDATION: Stop if received data is illogical
+    public Grid(int height, int width, int minHumidityTree, int minFuelTree, int maxHumidityTree, int maxFuelTree, int heat) {
+        
+        // 1. VALIDATION : Arrête le programme si les données reçues de l'IHM sont illogiques
         if (minFuelTree > maxFuelTree) {
             throw new IllegalArgumentException("Configuration error: minFuelTree ("
                 + minFuelTree + ") cannot exceed maxFuelTree (" + maxFuelTree + ").");
@@ -118,7 +118,7 @@ public class Grid {
                 randomHumidity = Math.max(0, Math.min(100, randomHumidity));
 
                 this.forest[row][col] = new Cell(
-                    State.VEGETATION, randomHumidity, 0, randomFuel, vegetation
+                    State.VEGETATION, randomHumidity, heat, randomFuel, vegetation
                 );
             }
         }

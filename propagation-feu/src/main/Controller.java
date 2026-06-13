@@ -29,6 +29,8 @@ public class Controller {
     @FXML private TextField inputMaxHumidity;
     @FXML private TextField inputMaxFuel;
     @FXML private TextField inputSpeed;
+    @FXML private TextField inputCanadairRadius;
+    @FXML private TextField inputHeat;
     @FXML private Button canadairButton;
     @FXML private Button startButton;
     @FXML private Button stepButton;
@@ -114,7 +116,13 @@ public class Controller {
         }
 
         if (canadairMode) {
-            displayManager.dropWater(row, col);
+
+            int radius = Integer.parseInt(inputCanadairRadius.getText());
+
+            radius = Math.max(1, Math.min(10, radius));
+
+            displayManager.dropWater(row, col, radius);
+
             canadairMode = false;
             canadairButton.setText("Canadair");
             displayManager.updateDisplay();
@@ -242,16 +250,15 @@ public class Controller {
             int minFuel = Integer.parseInt(inputMinFuel.getText());
             int maxHum = Integer.parseInt(inputMaxHumidity.getText());
             int maxFuel = Integer.parseInt(inputMaxFuel.getText());
-            int gridWidth = Integer.parseInt(inputGridWidth.getText());
-            int gridHeight = Integer.parseInt(inputGridHeight.getText());
-
-            gridHeight = Math.max(10, Math.min(200, gridHeight));
-            gridWidth = Math.max(10, Math.min(200, gridWidth));
+            int gridWidth= Integer.parseInt(inputGridWidth.getText());
+            int gridHeight= Integer.parseInt(inputGridHeight.getText());
+            int heat = Integer.parseInt(inputHeat.getText());
 
             int speed = Integer.parseInt(inputSpeed.getText());
 
-            forest = new Grid(gridHeight, gridWidth, minHum, minFuel, maxHum, maxFuel);
-            forest.setCellState(gridHeight / 2, gridWidth / 2, State.BURNING);
+
+            forest = new Grid(gridHeight, gridWidth, minHum, minFuel, maxHum, maxFuel, heat);
+            forest.setCellState(gridHeight/2,gridWidth/2, State.BURNING);
 
             engine = new SimulationEngine(forest, new PreventionFireAlgorithm(), new SimulationConfig());
             displayManager = new DisplayManager(engine, canvas);

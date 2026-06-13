@@ -25,7 +25,7 @@ public class SimulationConfig {
         this.heatImpact = 0.002;
         this.windImpact = 0.1;
         this.fuelConsumption = 10.0;
-        this.wind = new Wind(10, 0, 0); // Moderate wind toward East
+        this.wind = new Wind(10, -1, -1); 
     }
 
     /** @return Base fire spread probability (0.0 to 1.0) */
