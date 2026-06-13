@@ -16,11 +16,6 @@
          <Button fx:id="stepButton" id="stepButton" text="Step" onAction="#stepSimulation" />
       </HBox>
    </top>
-   <bottom>
-      <HBox alignment="CENTER">
-         <Button fx:id="canadairButton" id="canadairButton" text="Canadair" onAction="#activateCanadair"/>
-      </HBox>
-   </bottom>
    <center>
       <HBox alignment="CENTER">
          <Canvas fx:id="canvas" height="850.0" width="1700.0" BorderPane.alignment="CENTER" />
@@ -33,28 +28,38 @@
          <Label fx:id="heatLabel" />
          <Label fx:id="fuelLabel" />
          <Label text="Configuration" styleClass="label-title"/>
-         <Label text="Grid's width" />
+         <Label text="Largeur de la grille" />
          <TextField fx:id= "inputGridWidth" text="50"/>
-         <Label text="Grid's height" />
+         <Label text="Hauteur de la grille" />
          <TextField fx:id="inputGridHeight" text="50"/>
 
          <Label text="Vitesse de la simulation (ms) :" />
          <TextField fx:id="inputSpeed" text="200" prefWidth="80.0"/>
 
+         <Label text="Température :" />
+         <TextField fx:id="inputHeat" text="20" prefWidth="80.0"/>
+
          <Label text="Humidité Min :" />
          <TextField fx:id="inputMinHumidity" text="10" prefWidth="80.0"/>
 
          <Label text="Humidité Max :" />
-         <TextField fx:id="inputMaxHumidity" text="50" prefWidth="80.0"/>
+         <TextField fx:id="inputMaxHumidity" text="30" prefWidth="80.0"/>
          
          <Label text="Combustible Min :" />
          <TextField fx:id="inputMinFuel" text="50" prefWidth="80.0"/>
 
          <Label text="Combustible Max :" />
-         <TextField fx:id="inputMaxFuel" text="50" prefWidth="80.0"/>
+         <TextField fx:id="inputMaxFuel" text="100" prefWidth="80.0"/>
          
          <Button text="Relancer la Simu" onAction="#handleResetSimulation" style="-fx-background-color: #19ad0b; -fx-text-fill: white;-fx-font-weight: bold;"/>
       </VBox>
    </right>
+   <bottom>
+      <HBox alignment="CENTER" spacing="5">
+         <Label text="Rayon de largage : " />
+         <TextField fx:id="inputCanadairRadius" text="2" prefWidth="30.0"/>
+         <Button fx:id="canadairButton" id="canadairButton" text="Canadair" onAction="#activateCanadair"/>
+      </HBox>
+   </bottom>
 
 </BorderPane>

@@ -151,9 +151,8 @@ public class DisplayManager {
      * @param centerRow The row of the water drop center.
      * @param centerCol The column of the water drop center.
      */
-    public void dropWater(int centerRow, int centerCol) {
+    public void dropWater(int centerRow, int centerCol, int radius) {
         Grid grid = engine.getCurrentGrid();
-        int radius = 2;
 
         for (int dr = -radius; dr <= radius; dr++) {
             for (int dc = -radius; dc <= radius; dc++) {
