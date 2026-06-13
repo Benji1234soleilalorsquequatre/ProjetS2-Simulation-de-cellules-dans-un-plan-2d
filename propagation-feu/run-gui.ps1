@@ -69,6 +69,14 @@ if (Test-Path "src\main\view.fxml") {
     Write-Host "Attention : fichier src\main\view.fxml introuvable." -ForegroundColor Yellow
 }
 
+# Copie du fichier CSS
+if (Test-Path "src\main\Style.css") {
+    New-Item -ItemType Directory -Force "out\main" | Out-Null
+    Copy-Item "src\main\Style.css" "out\main\Style.css" -Force
+} else {
+    Write-Host "Attention : fichier src\main\Style.css introuvable." -ForegroundColor Yellow
+}
+
 Write-Host "=== Lancement version graphique JavaFX ==="
 
 # Lancement JavaFX
