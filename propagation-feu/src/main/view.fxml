@@ -29,9 +29,9 @@
          <Label fx:id="fuelLabel" />
          <Label text="Configuration" styleClass="label-title"/>
          <Label text="Largeur de la grille" />
-         <TextField fx:id= "inputGridWidth" text="50"/>
+         <TextField fx:id= "inputGridWidth" text="70"/>
          <Label text="Hauteur de la grille" />
-         <TextField fx:id="inputGridHeight" text="50"/>
+         <TextField fx:id="inputGridHeight" text="70"/>
 
          <Label text="Vitesse de la simulation (ms) :" />
          <TextField fx:id="inputSpeed" text="200" prefWidth="80.0"/>
