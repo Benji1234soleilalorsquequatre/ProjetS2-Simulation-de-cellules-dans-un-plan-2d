@@ -1,26 +1,39 @@
 package simulation;
+
 import model.Grid;
 import model.Cell;
 import model.State;
 
 /**
- * Moteur principal de la simulation. 
- * Orchestre la boucle temporelle, applique les algorithmes de propagation
- * et gère les états globaux de la grille (comme l'évaporation de l'eau du Canadair).
+ * Main simulation engine.
+ * <p>
+ * This class manages the temporal evolution of the forest by applying
+ * a fire propagation algorithm at each simulation step.
+ * It stores the current state of the grid, updates wet cells,
+ * and applies the physical parameters defined in the simulation
+ * configuration.
+ * </p>
  */
 public class SimulationEngine {
 
+    /** Grid representing the current state of the simulation. */
     private Grid currentGrid;
+
+    /** Algorithm used to compute fire propagation. */
     private FirePropagationAlgorithm algorithm;
+
+    /** Physical parameters of the simulation (wind, probabilities, etc.). */
     private SimulationConfig config;
+
+    /** Number of simulation steps executed since the start. */
     private int stepCounter;
 
     /**
-     * Construit un nouveau moteur de simulation.
+     * Creates a new simulation engine.
      *
-     * @param initialGrid La grille de départ contenant la forêt.
-     * @param algorithm L'algorithme de propagation du feu à utiliser.
-     * @param config La configuration physique (vent, probabilités).
+     * @param initialGrid The initial grid containing the forest.
+     * @param algorithm The fire propagation algorithm to use.
+     * @param config The simulation configuration and physical parameters.
      */
     public SimulationEngine(Grid initialGrid, FirePropagationAlgorithm algorithm, SimulationConfig config) {
         this.currentGrid = initialGrid;
@@ -30,9 +43,13 @@ public class SimulationEngine {
     }
 
     /**
-     * Exécute un "tour" complet de simulation (un pas de temps).
-     * Duplique la grille, gère l'évaporation, applique le feu sur chaque cellule,
-     * puis remplace l'ancienne grille par la nouvelle.
+     * Executes a complete simulation step.
+     * <p>
+     * A copy of the current grid is created in order to compute the
+     * next state without modifying the current one during processing.
+     * Wet cells are updated first, then the propagation algorithm is
+     * applied to every cell of the grid.
+     * </p>
      */
     public void step() {
         Grid nextGrid = currentGrid.copy();
@@ -43,17 +60,21 @@ public class SimulationEngine {
             for (int col = 0; col < currentGrid.getWidth(); col++) {
                 algorithm.apply(currentGrid, nextGrid, row, col, config);
             }
-        }   
+        }
 
         currentGrid = nextGrid;
         stepCounter++;
     }
 
     /**
-     * Gère l'évaporation de l'eau larguée par le Canadair.
-     * Diminue l'humidité des cellules mouillées à chaque tour jusqu'à ce qu'elles redeviennent des arbres normaux.
+     * Updates wet cells in the grid.
+     * <p>
+     * At each simulation step, the humidity of watered cells
+     * gradually decreases. When a cell becomes dry enough,
+     * it returns to its normal vegetation state.
+     * </p>
      *
-     * @param grid La grille sur laquelle appliquer l'évaporation.
+     * @param grid The grid to update.
      */
     private void updateWetCells(Grid grid) {
         for (int row = 0; row < grid.getHeight(); row++) {
@@ -73,14 +94,19 @@ public class SimulationEngine {
     }
 
     /**
-     * @return La grille dans son état actuel.
+     * Returns the current simulation grid.
+     *
+     * @return The current grid state.
      */
     public Grid getCurrentGrid() {
         return currentGrid;
     }
 
     /**
-     * @return Le nombre de tours (steps) écoulés depuis le début de la simulation.
+     * Returns the number of simulation steps executed since the start
+     * of the simulation.
+     *
+     * @return The simulation step counter.
      */
     public int getStepCounter() {
         return stepCounter;

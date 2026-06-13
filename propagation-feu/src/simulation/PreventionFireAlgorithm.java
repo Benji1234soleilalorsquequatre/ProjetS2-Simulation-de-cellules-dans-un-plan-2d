@@ -7,15 +7,18 @@ import model.Vegetation;
 import model.Wind;
 
 /**
- * Algorithme de propagation du feu incluant un système de prévention.
- * Contrairement à un algorithme classique, le feu ne se propage pas instantanément.
- * Les cellules cibles passent d'abord par un état d'alerte (PREVENTIVE) avant de brûler,
- * laissant le temps d'intervenir.
+ * Fire propagation algorithm that includes a prevention mechanism.
+ * <p>
+ * Unlike a standard fire propagation algorithm, fire does not spread
+ * immediately to neighboring cells. Instead, target cells first enter
+ * a preventive state ({@code PREVENTIVE}) before becoming burning cells,
+ * providing time for intervention.
+ * </p>
  */
 public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
 
     /**
-     * Les 8 directions possibles pour la propagation (Voisinage de Moore).
+     * The eight possible propagation directions (Moore neighborhood).
      */
     private static final int[][] DIRECTIONS = {
             {-1, -1}, {-1, 0}, {-1, 1},
@@ -24,60 +27,49 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
     };
 
     /**
-     * Applique l'algorithme de propagation sur une cellule spécifique de la grille.
+     * Applies the fire propagation algorithm to a specific cell.
      *
-     * @param currentGrid La grille dans son état actuel (lecture seule).
-     * @param nextGrid La grille du prochain tour (pour appliquer les modifications).
-     * @param row La ligne de la cellule à traiter.
-     * @param col La colonne de la cellule à traiter.
-     * @param config Les paramètres de la simulation (vent, consommation, etc.).
+     * @param currentGrid The current grid state (read-only).
+     * @param nextGrid The next grid state where updates are applied.
+     * @param row The row index of the cell to process.
+     * @param col The column index of the cell to process.
+     * @param config The simulation parameters (wind, fuel consumption, etc.).
      */
     @Override
-    public void apply(
-            Grid currentGrid,
-            Grid nextGrid,
-            int row,
-            int col,
-            SimulationConfig config) {
+    public void apply(Grid currentGrid, Grid nextGrid, int row, int col, SimulationConfig config) {
 
         Cell current = currentGrid.getCell(row, col);
 
-        // RÈGLE 1 : Si la case était orange (PREVENTIVE), elle prend feu (BURNING) au tour suivant
+        // Rule 1: Preventive cells become burning cells at the next step.
         if (current.getState() == State.PREVENTIVE) {
             nextGrid.getCell(row, col).setState(State.BURNING);
             nextGrid.getCell(row, col).setHeat(100);
             return;
         }
 
-        // Si la case n'est pas en feu, on s'arrête là
+        // Stop processing if the cell is not burning.
         if (current.getState() != State.BURNING) {
             return;
         }
 
-        // RÈGLE 2 : Si la case est en feu (BURNING), elle calcule la propagation vers ses voisins
+        // Rule 2: Burning cells attempt to spread fire to their neighbors.
         spreadFire(currentGrid, nextGrid, row, col, current, config);
 
-        // Et elle consomme son propre combustible (le bois de l'arbre)
+        // Burning cells consume their own fuel.
         updateBurningCell(nextGrid.getCell(row, col), config);
     }
 
     /**
-     * Tente de propager le feu de la cellule source vers toutes ses cellules voisines valides.
+     * Attempts to spread fire from a source cell to all valid neighboring cells.
      *
-     * @param currentGrid La grille actuelle.
-     * @param nextGrid La future grille.
-     * @param row L'index de ligne de la cellule source.
-     * @param col L'index de colonne de la cellule source.
-     * @param source L'objet Cell représentant la source du feu.
-     * @param config Les paramètres de simulation.
+     * @param currentGrid The current grid.
+     * @param nextGrid The next grid.
+     * @param row The row index of the source cell.
+     * @param col The column index of the source cell.
+     * @param source The source burning cell.
+     * @param config The simulation configuration.
      */
-    private void spreadFire(
-            Grid currentGrid,
-            Grid nextGrid,
-            int row,
-            int col,
-            Cell source,
-            SimulationConfig config) {
+    private void spreadFire(Grid currentGrid, Grid nextGrid, int row, int col, Cell source, SimulationConfig config) {
 
         for (int[] dir : DIRECTIONS) {
 
@@ -103,14 +95,19 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
     }
 
     /**
-     * Calcule la probabilité mathématique que le feu se propage à une cellule cible.
-     * Prend en compte l'humidité, la chaleur, l'alignement du vent et le type de végétation.
+     * Computes the probability that fire spreads from a burning cell
+     * to a target cell.
+     * <p>
+     * The probability depends on several factors:
+     * humidity, heat, wind direction and speed, fuel quantity,
+     * and vegetation type.
+     * </p>
      *
-     * @param source La cellule en feu.
-     * @param target La cellule cible qui risque de prendre feu.
-     * @param direction Le vecteur de direction [y, x].
-     * @param config Les poids d'impact (vent, humidité, etc.).
-     * @return La probabilité finale comprise entre 0.0 et 1.0.
+     * @param source The burning source cell.
+     * @param target The target cell.
+     * @param direction The propagation direction vector [row, column].
+     * @param config The simulation parameters.
+     * @return A probability value between 0.0 and 1.0.
      */
     private double computeSpreadProbability(
             Cell source,
@@ -136,22 +133,26 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
         double fuelFactor = 0.5 + target.getFuel() / 200.0;
         probability *= fuelFactor;
 
-        // Avec la végétation
-        if(target.getVegetation() == Vegetation.BRUSHWOOD){
-            probability += 0.35; // Les broussailles ont plus de chances de prendre feu
+        // Vegetation influence.
+        if (target.getVegetation() == Vegetation.BRUSHWOOD) {
+            probability += 0.35;
         } else {
             probability -= 0.05;
         }
 
         return Math.max(0.0, Math.min(1.0, probability));
-    }   
+    }
 
     /**
-     * Met à jour l'état d'une cellule en train de brûler (consommation du combustible).
-     * Si le combustible tombe à zéro, la cellule devient de la cendre (ASH).
+     * Updates a burning cell by consuming its fuel.
+     * <p>
+     * When the fuel reaches zero, the cell becomes ash ({@code ASH}).
+     * Otherwise, its heat is adjusted according to the remaining fuel.
+     * </p>
      *
-     * @param cell La cellule à mettre à jour.
-     * @param config La configuration indiquant la vitesse de consommation du bois.
+     * @param cell The burning cell to update.
+     * @param config The simulation configuration containing the fuel
+     * consumption rate.
      */
     private void updateBurningCell(Cell cell, SimulationConfig config) {
         int remainingFuel = (int) (cell.getFuel() - config.getFuelConsumption());
@@ -163,5 +164,5 @@ public class PreventionFireAlgorithm implements FirePropagationAlgorithm {
         } else {
             cell.setHeat(Math.max(20, Math.min(100, cell.getFuel())));
         }
-    }   
+    }
 }
